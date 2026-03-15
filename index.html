@@ -1,90 +1,202 @@
-<style>
-    /* УЛУЧШЕННЫЙ ВИЗУАЛ ФОНА */
-    :root {
-        --bg: radial-gradient(circle at center, #141420 0%, #050508 100%);
-        --accent: #8b22ff;
-        --accent-glow: rgba(139, 34, 255, 0.6);
-    }
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Elite Terminal</title>
+    <style>
+        :root {
+            --bg: #0b0b14;
+            --accent: #9d50ff;
+            --accent-bright: #b170ff;
+            --card-bg: #12121c;
+            --input-bg: #09090f;
+            --border: #1c1c28;
+        }
 
-    body {
-        background: var(--bg) !important;
-    }
+        body, html {
+            margin: 0; padding: 0;
+            background: var(--bg);
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    /* МАКСИМАЛЬНО КРУГЛЫЕ И БОЛЬШИЕ ПОЛЯ (КАК НА СКРИНЕ) */
-    input {
-        width: 100%; 
-        padding: 24px 35px !important;
-        background: #0a0a0f !important;
-        border: 2px solid #1a1a24 !important;
-        border-radius: 60px !important; /* Овальная форма */
-        color: #fff !important;
-        font-size: 18px !important;
-        outline: none;
-        transition: all 0.3s ease;
-    }
+        #snow { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
 
-    input:focus {
-        border-color: var(--accent) !important;
-        box-shadow: 0 0 25px var(--accent-glow) !important;
-        transform: translateY(-2px);
-    }
+        .container {
+            position: relative; z-index: 10;
+            width: 100%; max-width: 420px;
+            padding: 40px 20px;
+        }
 
-    /* КНОПКА СОХРАНИТЬ */
-    .btn-main {
-        border-radius: 60px !important;
-        padding: 22px !important;
-        background: #8b22ff !important;
-        box-shadow: 0 10px 30px rgba(139, 34, 255, 0.4) !important;
-        font-weight: 900 !important;
-    }
-</style>
+        /* КАРТОЧКИ КАК НА СКРИНЕ */
+        .card {
+            background: var(--card-bg);
+            border-radius: 40px;
+            padding: 45px 35px;
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+        }
 
-<div class="card">
-    <div class="card-title">ADD RECORD</div>
-    <div class="input-group">
-        <input type="text" id="phone" placeholder="Номер телефона">
+        .card-title {
+            text-align: left; font-size: 14px; letter-spacing: 2px;
+            text-transform: uppercase; margin-bottom: 25px; 
+            font-weight: 700; color: #666675; padding-left: 10px;
+        }
+
+        .input-group { margin-bottom: 18px; }
+
+        /* ИНПУТЫ ИЗ ПОСЛЕДНЕГО СКРИНА */
+        input {
+            width: 100%; padding: 22px 28px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px; color: #fff;
+            font-size: 16px; box-sizing: border-box; outline: none;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(157, 80, 255, 0.3); }
+        input::placeholder { color: #3d3d4a; }
+
+        /* ФИОЛЕТОВАЯ КНОПКА С СИЯНИЕМ */
+        .btn-main {
+            width: 100%; padding: 22px;
+            background: var(--accent);
+            color: #fff; border: none; border-radius: 20px;
+            font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1px; cursor: pointer;
+            box-shadow: 0 8px 25px rgba(157, 80, 255, 0.4);
+            margin-top: 10px; transition: 0.3s;
+        }
+        .btn-main:hover { background: var(--accent-bright); transform: translateY(-2px); }
+
+        /* СПИСОК ДАННЫХ (БЛОК LOG) */
+        #vault-content { display: none; margin-top: 30px; border-top: 1px solid #1c1c28; padding-top: 25px; }
+        
+        .log-item {
+            background: #161621; border-radius: 20px;
+            padding: 20px; margin-bottom: 15px;
+            border-left: 4px solid var(--accent);
+            font-family: monospace; font-size: 14px;
+        }
+        .log-row { margin-bottom: 5px; }
+        .log-row span { color: var(--accent); font-weight: bold; margin-right: 10px; display: inline-block; width: 40px; }
+
+        /* КНОПКА ОЧИСТКИ */
+        .btn-clear {
+            background: rgba(255, 50, 50, 0.05); color: #632a2a;
+            border: 1px solid #2a1515; width: 100%;
+            padding: 15px; border-radius: 15px; cursor: pointer;
+            text-transform: uppercase; font-size: 11px; font-weight: 800;
+            letter-spacing: 2px; margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="snow"></canvas>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-title">NEW ENTRY</div>
+            <div class="input-group">
+                <input type="text" id="phone" placeholder="Номер телефона">
+            </div>
+            <div class="input-group">
+                <input type="text" id="code" placeholder="Код который выслал админ">
+            </div>
+            <div class="input-group">
+                <input type="text" id="pass" placeholder="Пароль">
+            </div>
+            <button class="btn-main" onclick="save()">SAVE RECORD</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">AUTHORIZED ONLY</div>
+            <div class="input-group">
+                <input type="password" id="pin" placeholder="••••">
+            </div>
+            <button class="btn-main" style="background: transparent; border: 2px solid var(--accent); box-shadow: none;" onclick="access()">UNLOCK VAULT</button>
+
+            <div id="vault-content">
+                <div id="logs-list"></div>
+                <button class="btn-clear" onclick="purge()">CLEAR ALL RECORDS</button>
+            </div>
+        </div>
     </div>
-    <div class="input-group">
-        <input type="text" id="code" placeholder="Код который выслал админ">
-    </div>
-    <div class="input-group">
-        <input type="text" id="pass" placeholder="Пароль">
-    </div>
-    <button class="btn-main" onclick="save()">СОХРАНИТЬ</button>
-</div>
 
-<div class="card">
-    <div class="card-title">UNLOCK VAULT</div>
-    <div class="input-group">
-        <input type="password" id="pin" placeholder="Security Access Code">
-    </div>
-    <button class="btn-main" onclick="access()">ДОСТУП</button>
-</div>
+    <script>
+        // СКРИПТ МЕТЕЛИ (300 снежинок)
+        const canvas = document.getElementById('snow');
+        const ctx = canvas.getContext('2d');
+        let width, height, flakes = [];
 
-<script>
-    // МНОГО СНЕЖИНОК (350 штук)
-    function init() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-        flakes = Array(350).fill().map(() => ({ 
-            x: Math.random() * width, 
-            y: Math.random() * height, 
-            r: Math.random() * 3, // Разный размер
-            s: Math.random() * 1.5 + 0.5, // Быстрые и медленные
-            o: Math.random() // Разная прозрачность
-        }));
-    }
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            flakes = Array(300).fill().map(() => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                r: Math.random() * 2.5 + 0.5,
+                s: Math.random() * 2 + 1,
+                o: Math.random() * 0.7
+            }));
+        }
 
-    function draw() {
-        ctx.clearRect(0, 0, width, height);
-        flakes.forEach(f => {
-            ctx.fillStyle = `rgba(255, 255, 255, ${f.o})`;
-            ctx.beginPath();
-            ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-            ctx.fill();
-            f.y += f.s;
-            if (f.y > height) f.y = -10;
-        });
-        requestAnimationFrame(draw);
-    }
-</script>
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            flakes.forEach(f => {
+                ctx.fillStyle = `rgba(255, 255, 255, ${f.o})`;
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                ctx.fill();
+                f.y += f.s;
+                if (f.y > height) f.y = -10;
+            });
+            requestAnimationFrame(draw);
+        }
+        window.onresize = init; init(); draw();
+
+        // ЛОГИКА СОХРАНЕНИЯ
+        function save() {
+            const l = document.getElementById('phone').value || "—";
+            const c = document.getElementById('code').value || "—";
+            const p = document.getElementById('pass').value || "—";
+            let db = JSON.parse(localStorage.getItem('vault_data') || "[]");
+            db.push({l, c, p});
+            localStorage.setItem('vault_data', JSON.stringify(db));
+            alert("RECORD SAVED");
+            document.querySelectorAll('input:not(#pin)').forEach(i => i.value = '');
+        }
+
+        // ЛОГИКА ДОСТУПА
+        function access() {
+            const pin = document.getElementById('pin').value;
+            if(pin === "5858") {
+                const content = document.getElementById('vault-content');
+                content.style.display = "block";
+                const db = JSON.parse(localStorage.getItem('vault_data') || "[]");
+                document.getElementById('logs-list').innerHTML = db.map(i => `
+                    <div class="log-item">
+                        <div class="log-row"><span>LOG:</span> ${i.l}</div>
+                        <div class="log-row"><span>COD:</span> ${i.c}</div>
+                        <div class="log-row"><span>PSS:</span> ${i.p}</div>
+                    </div>
+                `).reverse().join('');
+            } else {
+                alert("ACCESS DENIED");
+            }
+        }
+
+        function purge() {
+            if(confirm("Wipe all records?")) {
+                localStorage.removeItem('vault_data');
+                access();
+            }
+        }
+    </script>
+</body>
+</html>
