@@ -2,83 +2,289 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Личный сейф</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Vault</title>
     <style>
-        body { font-family: sans-serif; background: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .card { background: #2a2a2a; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 300px; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #333; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #007bff; border: none; color: white; border-radius: 5px; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        #secret-content { display: none; margin-top: 20px; width: 100%; }
-        .account-item { background: #333; padding: 10px; margin-bottom: 5px; border-radius: 5px; font-size: 14px; border-left: 4px solid #007bff; }
+        /* Основные матовые цвета и градиент */
+        :root {
+            --bg-color: #1a1a2e; /* Глубокий темно-синий/фиолетовый */
+            --panel-color: rgba(45, 20, 70, 0.85); /* Матовый фиолетовый с прозрачностью */
+            --accent-color: #9d4edd; /* Яркий фиолетовый для акцентов */
+            --text-color: #e0aaff; /* Светло-лавандовый текст */
+            --input-bg: rgba(20, 10, 30, 0.6);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- Аниме элементы (Нашки) --- */
+        
+        /* Персонаж слева */
+        body::before {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: -50px;
+            width: 300px;
+            height: 400px;
+            /* Замени ссылку ниже на свою, если эта перестанет работать */
+            background-image: url('https://i.imgur.com/8Q4N4Xw.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: bottom left;
+            opacity: 0.7;
+            z-index: 1;
+            pointer-events: none; /* Чтобы не мешала кликам */
+        }
+
+        /* Персонаж справа */
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            right: -50px;
+            width: 300px;
+            height: 450px;
+            /* Замени ссылку ниже на свою */
+            background-image: url('https://i.imgur.com/w9zXzY7.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: bottom right;
+            opacity: 0.7;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* --- Анимация падающей сакуры на фоне --- */
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .petal {
+            position: fixed;
+            top: -10px;
+            background-color: #ffb7c5; /* Цвет лепестков */
+            border-radius: 150% 0 150% 0;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* --- Основной контейнер (Матовый эффект) --- */
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 10; /* Поверх фона и персонажей */
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--panel-color);
+            backdrop-filter: blur(10px); /* Эффект матового стекла */
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        h3, h4 {
+            text-align: center;
+            color: #fff;
+            margin-top: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px var(--accent-color);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            background: var(--input-bg);
+            color: #fff;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(157, 78, 221, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #7b2cbf;
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.7);
+        }
+
+        #secret-content {
+            display: none;
+            margin-top: 20px;
+            border-top: 2px solid var(--accent-color);
+            padding-top: 20px;
+        }
+
+        .account-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            border-left: 4px solid var(--accent-color);
+            position: relative;
+            word-break: break-all;
+        }
+
+        .account-item b {
+            color: var(--accent-color);
+        }
+
+        .clear-btn {
+            background-color: #5a189a;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+        .clear-btn:hover { background-color: #3c096c; }
+
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h3>Добавить аккаунт</h3>
-        <input type="text" id="phone" placeholder="Номер телефона">
-        <input type="text" id="code" placeholder="Код">
-        <input type="password" id="pass" placeholder="Пароль">
-        <button onclick="saveData()">Сохранить</button>
-    </div>
+    <script>
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDuration = Math.random() * 3 + 2 + 's'; // 2-5s
+            
+            // Случайный размер
+            const size = Math.random() * 10 + 5 + 'px';
+            petal.style.width = size;
+            petal.style.height = size;
 
-    <div class="card" style="margin-top: 20px;">
-        <h3>Просмотр данных</h3>
-        <input type="password" id="admin-pass" placeholder="Введите код доступа">
-        <button onclick="checkAccess()">Показать мои данные</button>
+            document.body.appendChild(petal);
 
-        <div id="secret-content">
-            <h4>Ваши записи:</h4>
-            <div id="list"></div>
-            <button onclick="clearData()" style="background: #dc3545; margin-top: 10px;">Очистить всё</button>
+            setTimeout(() => {
+                petal.remove();
+            }, 5000);
+        }
+        setInterval(createPetal, 300); // Создавать каждые 0.3 сек
+    </script>
+
+    <div class="container">
+        <div class="card">
+            <h3>Add Login</h3>
+            <input type="text" id="phone" placeholder="Phone / Login">
+            <input type="text" id="code" placeholder="Service Code">
+            <input type="password" id="pass" placeholder="Password">
+            <button onclick="saveData()">Save to Vault</button>
+        </div>
+
+        <div class="card">
+            <h3>Vault Access</h3>
+            <input type="password" id="admin-pass" placeholder="Enter Access Code">
+            <button onclick="checkAccess()">Unlock</button>
+
+            <div id="secret-content">
+                <h4>Stored Data</h4>
+                <div id="list"></div>
+                <button onclick="clearData()" class="clear-btn">Clear local storage</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Сохранение данных в память браузера (LocalStorage)
+        // Сохранение данных в LocalStorage
         function saveData() {
             const phone = document.getElementById('phone').value;
             const code = document.getElementById('code').value;
             const pass = document.getElementById('pass').value;
 
-            if(!phone || !code || !pass) return alert("Заполни все поля");
+            if(!phone || !code || !pass) return alert("Senpai, fill all fields!");
 
             const entry = { phone, code, pass };
-            let data = JSON.parse(localStorage.getItem('my_accounts') || "[]");
+            // Получаем старые данные или создаем пустой массив
+            let data = JSON.parse(localStorage.getItem('anime_vault_data') || "[]");
             data.push(entry);
-            localStorage.setItem('my_accounts', JSON.stringify(data));
+            // Сохраняем обратно
+            localStorage.setItem('anime_vault_data', JSON.stringify(data));
             
-            alert("Сохранено!");
-            document.querySelectorAll('input').forEach(i => i.value = "");
+            alert("Data saved locally!");
+            // Очистка полей
+            document.getElementById('phone').value = "";
+            document.getElementById('code').value = "";
+            document.getElementById('pass').value = "";
         }
 
-        // Проверка секретного кода 5858
+        // Проверка кода доступа
         function checkAccess() {
             const adminPass = document.getElementById('admin-pass').value;
             const content = document.getElementById('secret-content');
             const listDiv = document.getElementById('list');
 
+            // Твой секретный код
             if (adminPass === "5858") {
                 content.style.display = "block";
-                const data = JSON.parse(localStorage.getItem('my_accounts') || "[]");
-                listDiv.innerHTML = data.map(item => `
-                    <div class="account-item">
-                        <b>Тел:</b> ${item.phone}<br>
-                        <b>Код:</b> ${item.code}<br>
-                        <b>Пасс:</b> ${item.pass}
-                    </div>
-                `).join('');
+                const data = JSON.parse(localStorage.getItem('anime_vault_data') || "[]");
+                
+                if(data.length === 0) {
+                    listDiv.innerHTML = "<p style='text-align:center; opacity:0.5;'>Vault is empty.</p>";
+                } else {
+                    listDiv.innerHTML = data.map(item => `
+                        <div class="account-item">
+                            <b>Log:</b> ${item.phone}<br>
+                            <b>Srv:</b> ${item.code}<br>
+                            <b>Pass:</b> ${item.pass}
+                        </div>
+                    `).join('');
+                }
+                // Плавно скроллим вниз к данным
+                setTimeout(()=> content.scrollIntoView({behavior: "smooth"}), 100);
             } else {
-                alert("Неверный код доступа!");
+                alert("Wrong code, baka!");
                 content.style.display = "none";
+                document.getElementById('admin-pass').value = "";
             }
         }
 
+        // Очистка
         function clearData() {
-            if(confirm("Удалить все записи?")) {
-                localStorage.removeItem('my_accounts');
-                location.reload();
+            if(confirm("Are you sure? All local data will be deleted.")) {
+                localStorage.removeItem('anime_vault_data');
+                checkAccess(); // Обновить вид (покажет пустоту)
             }
         }
     </script>
