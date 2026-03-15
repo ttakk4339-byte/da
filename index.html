@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Cloud Vault</title>
+    <title>Private Cloud Vault</title>
     <style>
         :root {
             --bg: #0b0e14;
-            --accent: #bc13fe;
-            --glass: rgba(25, 25, 35, 0.7);
+            --accent: #8b2cf5;
+            --glass: rgba(20, 20, 30, 0.8);
             --text: #e0b1cb;
-            --input-focus: #d670ff;
         }
 
         body, html {
@@ -19,25 +18,21 @@
             width: 100%;
             height: 100%;
             background: var(--bg);
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden; /* Чтобы снег не создавал прокрутку */
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* --- ЭФФЕКТ СНЕГА --- */
         #snow-canvas {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
             z-index: 0;
             pointer-events: none;
         }
 
-        /* --- КОНТЕНТ --- */
         .container {
             position: relative;
             z-index: 10;
@@ -49,33 +44,30 @@
         .card {
             background: var(--glass);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 24px;
             padding: 30px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 
-                        inset 0 0 20px rgba(188, 19, 254, 0.05);
-            margin-bottom: 25px;
-            transition: transform 0.3s ease;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            margin-bottom: 20px;
         }
 
         h2 {
             margin-top: 0;
             color: #fff;
             text-align: center;
-            font-weight: 300;
-            letter-spacing: 3px;
+            font-weight: 400;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            font-size: 18px;
+            font-size: 16px;
             margin-bottom: 20px;
         }
 
         input {
             width: 100%;
             padding: 14px;
-            margin: 10px 0;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(188, 19, 254, 0.3);
+            margin: 8px 0;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(139, 44, 245, 0.4);
             border-radius: 12px;
             color: #fff;
             box-sizing: border-box;
@@ -85,69 +77,53 @@
 
         input:focus {
             border-color: var(--accent);
-            background: rgba(0, 0, 0, 0.5);
-            box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
+            box-shadow: 0 0 10px rgba(139, 44, 245, 0.3);
         }
 
         button {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #bc13fe, #7a12ff);
+            background: var(--accent);
             border: none;
             color: white;
-            font-weight: 600;
+            font-weight: 700;
             border-radius: 12px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.2s;
             text-transform: uppercase;
-            letter-spacing: 1px;
             margin-top: 10px;
         }
 
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(188, 19, 254, 0.4);
             filter: brightness(1.1);
+            transform: translateY(-1px);
         }
 
-        /* --- ВЫВОД ДАННЫХ --- */
         #vault-section {
             display: none;
             margin-top: 20px;
-            max-height: 300px;
+            max-height: 250px;
             overflow-y: auto;
-            padding-right: 10px;
         }
 
         .entry {
             background: rgba(255, 255, 255, 0.03);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            border-left: 2px solid var(--accent);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--accent);
             font-size: 14px;
-            animation: fadeIn 0.5s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .entry b { color: var(--accent); display: inline-block; width: 70px; }
-
-        /* Кастомный скроллбар */
-        #vault-section::-webkit-scrollbar { width: 4px; }
-        #vault-section::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        .entry b { color: var(--accent); display: inline-block; width: 60px; }
 
         .btn-clear {
             background: transparent;
-            border: 1px solid rgba(255, 50, 50, 0.4);
-            color: rgba(255, 50, 50, 0.8);
-            font-size: 11px;
-            margin-top: 20px;
+            border: 1px solid rgba(255, 50, 50, 0.3);
+            color: #ff3232;
+            font-size: 10px;
+            margin-top: 15px;
         }
-        .btn-clear:hover { background: rgba(255, 50, 50, 0.1); border-color: #ff3232; }
     </style>
 </head>
 <body>
@@ -158,88 +134,66 @@
         <div class="card">
             <h2>Add Record</h2>
             <input type="text" id="phone" placeholder="Логин или телефон">
-            <input type="text" id="service" placeholder="Сервис (например, VK)">
+            <input type="text" id="code" placeholder="Код">
             <input type="password" id="pass" placeholder="Пароль">
             <button onclick="saveData()">Сохранить</button>
         </div>
 
         <div class="card">
             <h2>Unlock Vault</h2>
-            <input type="password" id="master-pin" placeholder="Введите 5858">
+            <input type="password" id="master-pin" placeholder="••••">
             <button onclick="unlock()">Доступ</button>
 
             <div id="vault-section">
                 <div id="data-list"></div>
-                <button class="btn-clear" onclick="clearAll()">Удалить все данные</button>
+                <button class="btn-clear" onclick="clearAll()">Очистить всё</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- ЛОГИКА СНЕГА ---
+        // --- Снег ---
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, flakes = [];
 
         function initSnow() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
+            width = window.innerWidth; height = window.innerHeight;
+            canvas.width = width; canvas.height = height;
             flakes = [];
-            for (let i = 0; i < 150; i++) {
-                flakes.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    r: Math.random() * 3 + 1,
-                    d: Math.random() * 1,
-                    speed: Math.random() * 1 + 0.5
-                });
-            }
-        }
-
-        function drawSnow() {
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-            ctx.beginPath();
-            for (let f of flakes) {
-                ctx.moveTo(f.x, f.y);
-                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
-            }
-            ctx.fill();
-            updateSnow();
-        }
-
-        function updateSnow() {
-            for (let f of flakes) {
-                f.y += f.speed;
-                f.x += Math.sin(f.y / 50);
-                if (f.y > height) f.y = -10, f.x = Math.random() * width;
+            for (let i = 0; i < 100; i++) {
+                flakes.push({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 2 + 1, speed: Math.random() * 1 + 0.5 });
             }
         }
 
         function animate() {
-            drawSnow();
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+            ctx.beginPath();
+            for (let f of flakes) {
+                ctx.moveTo(f.x, f.y);
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                f.y += f.speed;
+                if (f.y > height) f.y = -5;
+            }
+            ctx.fill();
             requestAnimationFrame(animate);
         }
 
+        initSnow(); animate();
         window.addEventListener('resize', initSnow);
-        initSnow();
-        animate();
 
-        // --- ЛОГИКА ХРАНИЛИЩА ---
+        // --- Логика ---
         function saveData() {
             const p = document.getElementById('phone').value;
-            const s = document.getElementById('service').value;
+            const c = document.getElementById('code').value;
             const ps = document.getElementById('pass').value;
+            if(!p || !c || !ps) return;
 
-            if(!p || !s || !ps) return alert("Заполни все поля, бро");
-
-            let storage = JSON.parse(localStorage.getItem('cloud_vault') || "[]");
-            storage.push({ p, s, ps });
-            localStorage.setItem('cloud_vault', JSON.stringify(storage));
-            
-            alert("Данные в сейфе!");
+            let storage = JSON.parse(localStorage.getItem('vlt') || "[]");
+            storage.push({ p, c, ps });
+            localStorage.setItem('vlt', JSON.stringify(storage));
+            alert("Готово");
             document.querySelectorAll('input').forEach(i => i.value = '');
         }
 
@@ -250,30 +204,21 @@
 
             if(pin === "5858") {
                 section.style.display = "block";
-                const data = JSON.parse(localStorage.getItem('cloud_vault') || "[]");
-                
-                if(data.length === 0) {
-                    list.innerHTML = "<p style='text-align:center; font-size: 12px; opacity: 0.5;'>Сейф пуст</p>";
-                } else {
-                    list.innerHTML = data.map(item => `
-                        <div class="entry">
-                            <b>СЕРВИС:</b> ${item.s}<br>
-                            <b>ЛОГИН:</b> ${item.p}<br>
-                            <b>ПАСС:</b> ${item.ps}
-                        </div>
-                    `).join('');
-                }
+                const data = JSON.parse(localStorage.getItem('vlt') || "[]");
+                list.innerHTML = data.map(item => `
+                    <div class="entry">
+                        <b>КОД:</b> ${item.c}<br>
+                        <b>ЛОГ:</b> ${item.p}<br>
+                        <b>ПАСС:</b> ${item.ps}
+                    </div>
+                `).join('') || "Пусто";
             } else {
-                alert("Доступ запрещен!");
-                section.style.display = "none";
+                alert("!");
             }
         }
 
         function clearAll() {
-            if(confirm("Реально всё стереть?")) {
-                localStorage.removeItem('cloud_vault');
-                unlock();
-            }
+            if(confirm("?")) { localStorage.removeItem('vlt'); unlock(); }
         }
     </script>
 </body>
