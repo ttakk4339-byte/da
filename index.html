@@ -8,43 +8,33 @@
         :root {
             --bg: #0b0e14;
             --accent: #8b2cf5;
-            --glass: rgba(20, 20, 30, 0.8);
+            --glass: rgba(20, 20, 30, 0.85);
             --text: #e0b1cb;
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             background: var(--bg);
             font-family: 'Segoe UI', sans-serif;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
         }
 
         #snow-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 0;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0;
+            z-index: 0; pointer-events: none;
         }
 
         .container {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
+            position: relative; z-index: 10;
+            width: 100%; max-width: 400px; padding: 20px;
         }
 
         .card {
             background: var(--glass);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(139, 44, 245, 0.2);
             border-radius: 24px;
             padding: 30px;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
@@ -52,27 +42,17 @@
         }
 
         h2 {
-            margin-top: 0;
-            color: #fff;
-            text-align: center;
-            font-weight: 400;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            font-size: 16px;
-            margin-bottom: 20px;
+            margin-top: 0; color: #fff; text-align: center;
+            font-weight: 400; letter-spacing: 2px;
+            text-transform: uppercase; font-size: 16px; margin-bottom: 20px;
         }
 
         input {
-            width: 100%;
-            padding: 14px;
-            margin: 8px 0;
+            width: 100%; padding: 14px; margin: 8px 0;
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(139, 44, 245, 0.4);
-            border-radius: 12px;
-            color: #fff;
-            box-sizing: border-box;
-            outline: none;
-            transition: 0.3s;
+            border-radius: 12px; color: #fff;
+            box-sizing: border-box; outline: none; transition: 0.3s;
         }
 
         input:focus {
@@ -81,48 +61,36 @@
         }
 
         button {
-            width: 100%;
-            padding: 14px;
+            width: 100%; padding: 14px;
             background: var(--accent);
-            border: none;
-            color: white;
-            font-weight: 700;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.2s;
-            text-transform: uppercase;
-            margin-top: 10px;
+            border: none; color: white;
+            font-weight: 700; border-radius: 12px;
+            cursor: pointer; transition: 0.2s;
+            text-transform: uppercase; margin-top: 10px;
         }
 
-        button:hover {
-            filter: brightness(1.1);
-            transform: translateY(-1px);
-        }
+        button:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
+        /* СПИСОК ДАННЫХ */
         #vault-section {
-            display: none;
-            margin-top: 20px;
-            max-height: 250px;
-            overflow-y: auto;
+            display: none; margin-top: 20px;
+            max-height: 250px; overflow-y: auto;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 15px;
         }
 
         .entry {
             background: rgba(255, 255, 255, 0.03);
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border-left: 3px solid var(--accent);
-            font-size: 14px;
+            padding: 12px; border-radius: 10px;
+            margin-bottom: 10px; border-left: 3px solid var(--accent);
+            font-size: 14px; color: #fff;
         }
 
         .entry b { color: var(--accent); display: inline-block; width: 60px; }
 
         .btn-clear {
-            background: transparent;
-            border: 1px solid rgba(255, 50, 50, 0.3);
-            color: #ff3232;
-            font-size: 10px;
-            margin-top: 15px;
+            background: transparent; border: 1px solid rgba(255, 50, 50, 0.3);
+            color: #ff3232; font-size: 10px; margin-top: 15px;
         }
     </style>
 </head>
@@ -152,7 +120,7 @@
     </div>
 
     <script>
-        // --- Снег ---
+        // --- 1. АНИМАЦИЯ СНЕГА ---
         const canvas = document.getElementById('snow-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, flakes = [];
@@ -179,24 +147,38 @@
             ctx.fill();
             requestAnimationFrame(animate);
         }
-
         initSnow(); animate();
         window.addEventListener('resize', initSnow);
 
-        // --- Логика ---
+        // --- 2. ЛОГИКА СОХРАНЕНИЯ (LocalStorage) ---
         function saveData() {
             const p = document.getElementById('phone').value;
             const c = document.getElementById('code').value;
             const ps = document.getElementById('pass').value;
-            if(!p || !c || !ps) return;
 
-            let storage = JSON.parse(localStorage.getItem('vlt') || "[]");
+            if(!p || !c || !ps) {
+                alert("Заполни все поля!");
+                return;
+            }
+
+            // Берем старые данные из памяти или создаем пустой массив
+            let storage = JSON.parse(localStorage.getItem('my_vault_data') || "[]");
+            
+            // Добавляем новую запись
             storage.push({ p, c, ps });
-            localStorage.setItem('vlt', JSON.stringify(storage));
-            alert("Готово");
-            document.querySelectorAll('input').forEach(i => i.value = '');
+            
+            // Сохраняем обратно в память браузера
+            localStorage.setItem('my_vault_data', JSON.stringify(storage));
+            
+            alert("Запись успешно сохранена!");
+            
+            // Очищаем поля ввода
+            document.getElementById('phone').value = '';
+            document.getElementById('code').value = '';
+            document.getElementById('pass').value = '';
         }
 
+        // --- 3. ЛОГИКА ОТОБРАЖЕНИЯ ---
         function unlock() {
             const pin = document.getElementById('master-pin').value;
             const section = document.getElementById('vault-section');
@@ -204,21 +186,33 @@
 
             if(pin === "5858") {
                 section.style.display = "block";
-                const data = JSON.parse(localStorage.getItem('vlt') || "[]");
-                list.innerHTML = data.map(item => `
-                    <div class="entry">
-                        <b>КОД:</b> ${item.c}<br>
-                        <b>ЛОГ:</b> ${item.p}<br>
-                        <b>ПАСС:</b> ${item.ps}
-                    </div>
-                `).join('') || "Пусто";
+                
+                // Грузим данные из памяти
+                const data = JSON.parse(localStorage.getItem('my_vault_data') || "[]");
+                
+                if(data.length === 0) {
+                    list.innerHTML = "<p style='text-align:center; opacity:0.5;'>Сейф пуст</p>";
+                } else {
+                    list.innerHTML = data.map(item => `
+                        <div class="entry">
+                            <b>КОД:</b> ${item.c}<br>
+                            <b>ЛОГ:</b> ${item.p}<br>
+                            <b>ПАСС:</b> ${item.ps}
+                        </div>
+                    `).join('');
+                }
             } else {
-                alert("!");
+                alert("Неверный код доступа!");
+                section.style.display = "none";
             }
         }
 
+        // --- 4. ОЧИСТКА ---
         function clearAll() {
-            if(confirm("?")) { localStorage.removeItem('vlt'); unlock(); }
+            if(confirm("Удалить все данные навсегда?")) {
+                localStorage.removeItem('my_vault_data');
+                unlock(); // Обновить экран
+            }
         }
     </script>
 </body>
