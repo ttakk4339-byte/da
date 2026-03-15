@@ -3,182 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Private Cloud Vault</title>
+    <title>Busterenko Security Group | Terminal</title>
     <style>
         :root {
-            --bg: #0b0e14;
-            --accent: #8b2cf5;
-            --glass: rgba(20, 20, 30, 0.85);
-            --text: #e0b1cb;
+            --bsg-blue: #0a192f;        /* Глубокий корпоративный синий */
+            --bsg-accent: #10b981;      /* Изумрудный (безопасность/стабильность) */
+            --bsg-silver: #94a3b8;      /* Текст */
+            --bsg-border: #1e293b;      /* Границы */
+            --bsg-card: #111827;        /* Фон карточек */
         }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            background: var(--bg);
-            font-family: 'Segoe UI', sans-serif;
-            overflow: hidden;
+            background: var(--bsg-blue);
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            color: #f1f5f9;
             display: flex; justify-content: center; align-items: center;
         }
 
-        #snow-canvas {
-            position: fixed; top: 0; left: 0;
-            z-index: 0; pointer-events: none;
+        /* Фоновый паттерн - строгие линии вместо снега */
+        #bg-pattern {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0);
+            background-size: 40px 40px;
+            z-index: 0;
         }
 
         .container {
             position: relative; z-index: 10;
-            width: 100%; max-width: 400px; padding: 20px;
+            width: 100%; max-width: 420px; padding: 20px;
+        }
+
+        .header {
+            text-align: center; margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem; font-weight: 800; letter-spacing: -0.025em;
+            margin: 0; color: #fff; text-transform: uppercase;
+        }
+
+        .header .badge {
+            display: inline-block; background: var(--bsg-accent);
+            color: var(--bsg-blue); font-size: 10px; font-weight: 800;
+            padding: 2px 8px; border-radius: 4px; vertical-align: middle;
+            margin-left: 8px;
+        }
+
+        .header p {
+            font-size: 12px; color: var(--bsg-silver); margin-top: 8px;
         }
 
         .card {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(139, 44, 245, 0.2);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            background: var(--bsg-card);
+            border: 1px solid var(--bsg-border);
+            border-radius: 12px; padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
             margin-bottom: 20px;
         }
 
-        h2 {
-            margin-top: 0; color: #fff; text-align: center;
-            font-weight: 400; letter-spacing: 2px;
-            text-transform: uppercase; font-size: 16px; margin-bottom: 20px;
+        label {
+            display: block; font-size: 11px; color: var(--bsg-silver);
+            text-transform: uppercase; margin-bottom: 6px; font-weight: 600;
         }
 
         input {
-            width: 100%; padding: 14px; margin: 8px 0;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(139, 44, 245, 0.4);
-            border-radius: 12px; color: #fff;
-            box-sizing: border-box; outline: none; transition: 0.3s;
+            width: 100%; padding: 12px; margin-bottom: 16px;
+            background: #030712; border: 1px solid var(--bsg-border);
+            border-radius: 6px; color: #fff; font-size: 14px;
+            box-sizing: border-box; transition: 0.2s;
         }
 
         input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 10px rgba(139, 44, 245, 0.3);
+            outline: none; border-color: var(--bsg-accent);
+            box-shadow: 0 0 0 1px var(--bsg-accent);
         }
 
         button {
-            width: 100%; padding: 14px;
-            background: var(--accent);
-            border: none; color: white;
-            font-weight: 700; border-radius: 12px;
-            cursor: pointer; transition: 0.2s;
-            text-transform: uppercase; margin-top: 10px;
+            width: 100%; padding: 12px;
+            background: #fff; color: #000;
+            border: none; font-weight: 700; border-radius: 6px;
+            cursor: pointer; transition: 0.2s; font-size: 14px;
         }
 
-        button:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        button:hover { background: #e2e8f0; }
 
-        /* СПИСОК ДАННЫХ */
+        .btn-secondary {
+            background: var(--bsg-accent); color: var(--bsg-blue);
+        }
+
+        .btn-secondary:hover { opacity: 0.9; }
+
+        /* Vault List */
         #vault-section {
-            display: none; margin-top: 20px;
-            max-height: 250px; overflow-y: auto;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 15px;
+            display: none; border-top: 1px solid var(--bsg-border);
+            margin-top: 20px; padding-top: 20px;
         }
 
-        .entry {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 12px; border-radius: 10px;
-            margin-bottom: 10px; border-left: 3px solid var(--accent);
-            font-size: 14px; color: #fff;
+        .record {
+            background: #030712; border-left: 4px solid var(--bsg-accent);
+            padding: 12px; border-radius: 4px; margin-bottom: 10px;
+            font-family: 'Courier New', monospace; font-size: 12px;
         }
 
-        .entry b { color: var(--accent); display: inline-block; width: 60px; }
+        .record-label { color: var(--bsg-silver); margin-right: 5px; }
 
-        .btn-clear {
-            background: transparent; border: 1px solid rgba(255, 50, 50, 0.3);
-            color: #ff3232; font-size: 10px; margin-top: 15px;
+        .footer {
+            text-align: center; font-size: 10px; color: var(--bsg-silver);
+            opacity: 0.5; margin-top: 40px;
+        }
+
+        .danger-zone {
+            margin-top: 20px; text-align: center;
+        }
+
+        .btn-danger {
+            background: transparent; border: 1px solid #ef4444; color: #ef4444;
+            font-size: 10px; cursor: pointer; padding: 4px 10px; border-radius: 4px;
         }
     </style>
 </head>
 <body>
 
-    <canvas id="snow-canvas"></canvas>
+    <div id="bg-pattern"></div>
 
     <div class="container">
-        <div class="card">
-            <h2>Add Record</h2>
-            <input type="text" id="phone" placeholder="Логин или телефон">
-            <input type="text" id="code" placeholder="Код">
-            <input type="password" id="pass" placeholder="Пароль">
-            <button onclick="saveData()">Сохранить</button>
+        <div class="header">
+            <h1>Бустеренко<span class="badge">PRO</span></h1>
+            <p>Система защищенного хранения протоколов</p>
         </div>
 
         <div class="card">
-            <h2>Unlock Vault</h2>
-            <input type="password" id="master-pin" placeholder="••••">
-            <button onclick="unlock()">Доступ</button>
+            <label>Идентификатор</label>
+            <input type="text" id="phone" placeholder="User ID / Phone">
+            
+            <label>Сервисный код</label>
+            <input type="text" id="code" placeholder="Service Code">
+            
+            <label>Мастер-пароль</label>
+            <input type="password" id="pass" placeholder="••••••••">
+            
+            <button class="btn-secondary" onclick="saveData()">Внести в реестр</button>
+        </div>
+
+        <div class="card">
+            <label>Доступ к архиву</label>
+            <input type="password" id="master-pin" placeholder="Security PIN">
+            <button onclick="unlock()">Авторизация</button>
 
             <div id="vault-section">
                 <div id="data-list"></div>
-                <button class="btn-clear" onclick="clearAll()">Очистить всё</button>
+                <div class="danger-zone">
+                    <button class="btn-danger" onclick="clearAll()">Очистить базу данных</button>
+                </div>
             </div>
+        </div>
+
+        <div class="footer">
+            © 2026 Группа компаний «Бустеренко». <br>
+            Департамент информационной безопасности.
         </div>
     </div>
 
     <script>
-        // --- 1. АНИМАЦИЯ СНЕГА ---
-        const canvas = document.getElementById('snow-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height, flakes = [];
-
-        function initSnow() {
-            width = window.innerWidth; height = window.innerHeight;
-            canvas.width = width; canvas.height = height;
-            flakes = [];
-            for (let i = 0; i < 100; i++) {
-                flakes.push({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 2 + 1, speed: Math.random() * 1 + 0.5 });
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, width, height);
-            ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-            ctx.beginPath();
-            for (let f of flakes) {
-                ctx.moveTo(f.x, f.y);
-                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-                f.y += f.speed;
-                if (f.y > height) f.y = -5;
-            }
-            ctx.fill();
-            requestAnimationFrame(animate);
-        }
-        initSnow(); animate();
-        window.addEventListener('resize', initSnow);
-
-        // --- 2. ЛОГИКА СОХРАНЕНИЯ (LocalStorage) ---
         function saveData() {
             const p = document.getElementById('phone').value;
             const c = document.getElementById('code').value;
             const ps = document.getElementById('pass').value;
 
-            if(!p || !c || !ps) {
-                alert("Заполни все поля!");
-                return;
-            }
+            if(!p || !c || !ps) return alert("Ошибка: Заполните все поля реестра.");
 
-            // Берем старые данные из памяти или создаем пустой массив
-            let storage = JSON.parse(localStorage.getItem('my_vault_data') || "[]");
+            let storage = JSON.parse(localStorage.getItem('bsg_data') || "[]");
+            storage.push({ p, c, ps, date: new Date().toLocaleDateString() });
+            localStorage.setItem('bsg_data', JSON.stringify(storage));
             
-            // Добавляем новую запись
-            storage.push({ p, c, ps });
-            
-            // Сохраняем обратно в память браузера
-            localStorage.setItem('my_vault_data', JSON.stringify(storage));
-            
-            alert("Запись успешно сохранена!");
-            
-            // Очищаем поля ввода
-            document.getElementById('phone').value = '';
-            document.getElementById('code').value = '';
-            document.getElementById('pass').value = '';
+            alert("Данные успешно синхронизированы с узлом Бустеренко.");
+            document.querySelectorAll('input:not(#master-pin)').forEach(i => i.value = '');
         }
 
-        // --- 3. ЛОГИКА ОТОБРАЖЕНИЯ ---
         function unlock() {
             const pin = document.getElementById('master-pin').value;
             const section = document.getElementById('vault-section');
@@ -186,32 +189,30 @@
 
             if(pin === "5858") {
                 section.style.display = "block";
-                
-                // Грузим данные из памяти
-                const data = JSON.parse(localStorage.getItem('my_vault_data') || "[]");
+                const data = JSON.parse(localStorage.getItem('bsg_data') || "[]");
                 
                 if(data.length === 0) {
-                    list.innerHTML = "<p style='text-align:center; opacity:0.5;'>Сейф пуст</p>";
+                    list.innerHTML = "<p style='text-align:center; color:#4b5563; font-size:12px;'>Архив пуст.</p>";
                 } else {
                     list.innerHTML = data.map(item => `
-                        <div class="entry">
-                            <b>КОД:</b> ${item.c}<br>
-                            <b>ЛОГ:</b> ${item.p}<br>
-                            <b>ПАСС:</b> ${item.ps}
+                        <div class="record">
+                            <div><span class="record-label">ID:</span> ${item.p}</div>
+                            <div><span class="record-label">COD:</span> ${item.c}</div>
+                            <div><span class="record-label">KEY:</span> ${item.ps}</div>
+                            <div style="font-size:9px; margin-top:5px; color:#10b981;">LOGGED: ${item.date}</div>
                         </div>
                     `).join('');
                 }
             } else {
-                alert("Неверный код доступа!");
+                alert("Отказ в доступе: Неверный PIN-код.");
                 section.style.display = "none";
             }
         }
 
-        // --- 4. ОЧИСТКА ---
         function clearAll() {
-            if(confirm("Удалить все данные навсегда?")) {
-                localStorage.removeItem('my_vault_data');
-                unlock(); // Обновить экран
+            if(confirm("Внимание: Это действие безвозвратно удалит все записи из архива Бустеренко. Продолжить?")) {
+                localStorage.removeItem('bsg_data');
+                unlock();
             }
         }
     </script>
