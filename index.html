@@ -3,188 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BUSTERENKO // FOUNDER @XIPEJ</title>
+    <title>BUSTERENKO // @XIPEJ</title>
     <style>
         :root {
-            --bg: #040406;
-            --accent: #bc13fe; 
-            --accent-glow: rgba(188, 19, 254, 0.4);
-            --glass: rgba(255, 255, 255, 0.02);
-            --border: rgba(255, 255, 255, 0.07);
+            --bg: #050508;
+            --accent: #a855f7;
+            --accent-glow: rgba(168, 85, 247, 0.4);
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
         }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
             background: var(--bg);
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             color: #fff;
+            display: flex; justify-content: center; align-items: center;
             overflow: hidden;
-            display: flex; flex-direction: column;
         }
 
+        /* Тот самый снег */
         #snow {
             position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none;
         }
 
-        /* Статичное свечение центра управления */
-        .founder-glow {
-            position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100vw; height: 100vh;
-            background: radial-gradient(circle at center, rgba(188, 19, 254, 0.07) 0%, transparent 70%);
-            z-index: 0;
+        /* Статичное свечение под картой */
+        .glow {
+            position: absolute; width: 300px; height: 300px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            filter: blur(60px); z-index: 0;
         }
 
-        /* ХЕДЕР С ТВОИМ СТАТУСОМ */
-        header {
+        .container {
             position: relative; z-index: 10;
-            padding: 40px 60px;
-            display: flex; justify-content: space-between; align-items: flex-end;
+            width: 90%; max-width: 380px;
         }
 
-        .brand-block h1 {
-            font-size: 32px; font-weight: 900; letter-spacing: 15px;
-            margin: 0; text-transform: uppercase;
-            background: linear-gradient(to bottom, #fff, #666);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        /* ХЕДЕР С РАСТЯНУТЫМ ТЕКСТОМ */
+        .brand-header {
+            text-align: center; margin-bottom: 25px;
         }
 
-        .founder-block {
-            text-align: right;
+        .brand-header h1 {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 12px; /* Ебейший растяг текста */
+            text-transform: uppercase;
+            margin: 0;
+            background: linear-gradient(180deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .founder-label {
-            font-size: 10px; letter-spacing: 3px; color: var(--accent);
-            text-transform: uppercase; font-weight: 800; margin-bottom: 5px;
+        .founder-badge {
+            margin-top: 10px;
+            font-size: 9px;
+            letter-spacing: 4px; /* Растяг статуса */
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 700;
+            opacity: 0.8;
         }
 
         .founder-name {
-            font-size: 24px; font-weight: 300; letter-spacing: 2px;
-            color: #fff; text-shadow: 0 0 20px var(--accent-glow);
+            font-size: 16px;
+            letter-spacing: 2px;
+            margin-top: 4px;
+            font-weight: 300;
+            color: #fff;
         }
 
-        /* ОСНОВНОЙ ТЕРМИНАЛ (РАСТЯГ) */
-        .main-grid {
-            position: relative; z-index: 10;
-            flex: 1; display: grid;
-            grid-template-columns: 1fr 1.5fr; /* Лево - ввод, Право - архив */
-            gap: 40px; padding: 0 60px 60px 60px;
-        }
-
-        .panel {
+        /* КАРТОЧКА - ЖИДКОЕ СТЕКЛО */
+        .card {
             background: var(--glass);
-            backdrop-filter: blur(40px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 50px;
-            display: flex; flex-direction: column;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            margin-bottom: 15px;
         }
 
         h2 {
-            font-size: 14px; text-transform: uppercase; letter-spacing: 5px;
-            margin-bottom: 40px; color: rgba(255,255,255,0.4);
-            display: flex; align-items: center;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 20px;
+            text-align: center;
         }
-
-        h2::before {
-            content: ""; width: 20px; height: 1px; background: var(--accent); margin-right: 15px;
-        }
-
-        .input-wrap { margin-bottom: 25px; }
 
         input {
-            width: 100%; padding: 22px 30px;
-            background: rgba(255, 255, 255, 0.03);
+            width: 100%; padding: 16px 20px; margin-bottom: 12px;
+            background: rgba(0, 0, 0, 0.4);
             border: 1px solid var(--border);
-            border-radius: 20px; color: #fff;
-            font-size: 18px; outline: none; transition: 0.4s;
-            box-sizing: border-box;
+            border-radius: 15px; color: #fff;
+            font-size: 14px; box-sizing: border-box; outline: none;
+            transition: 0.3s;
         }
 
         input:focus {
             border-color: var(--accent);
-            background: rgba(188, 19, 254, 0.05);
-            box-shadow: 0 0 30px rgba(188, 19, 254, 0.1);
+            background: rgba(168, 85, 247, 0.05);
         }
 
         button {
-            padding: 22px; border-radius: 20px; border: none;
-            background: #fff; color: #000; font-weight: 900;
-            text-transform: uppercase; letter-spacing: 2px; font-size: 14px;
-            cursor: pointer; transition: 0.3s; margin-top: auto;
+            width: 100%; padding: 16px;
+            background: #fff; color: #000;
+            border: none; font-weight: 800; border-radius: 15px;
+            cursor: pointer; transition: 0.3s;
+            text-transform: uppercase; font-size: 11px; letter-spacing: 2px;
         }
 
         button:hover {
             background: var(--accent); color: #fff;
-            box-shadow: 0 0 40px var(--accent-glow);
-            transform: translateY(-3px);
+            box-shadow: 0 0 25px var(--accent-glow);
         }
 
-        /* АРХИВ ОСНОВАТЕЛЯ */
+        /* АРХИВ */
         #vault-section {
-            display: none; height: 100%; flex-direction: column;
-        }
-
-        .scroll-area {
-            flex: 1; overflow-y: auto; padding-right: 20px;
+            display: none; margin-top: 15px;
+            max-height: 200px; overflow-y: auto;
         }
 
         .entry {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border);
-            padding: 25px; border-radius: 24px;
-            margin-bottom: 20px; font-family: 'Consolas', monospace;
-            display: grid; grid-template-columns: 1fr 1fr 1fr;
-            align-items: center; transition: 0.3s;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px; border-radius: 12px;
+            margin-bottom: 10px; border-left: 2px solid var(--accent);
+            font-size: 12px; font-family: monospace;
         }
 
-        .entry:hover { background: rgba(188, 19, 254, 0.05); border-color: var(--accent); }
+        .entry b { color: var(--accent); margin-right: 5px; }
 
-        .entry b { color: var(--accent); font-size: 11px; display: block; margin-bottom: 5px; opacity: 0.6; }
+        .btn-clear {
+            background: transparent; border: 1px solid rgba(255, 68, 68, 0.3);
+            color: #ff4444; font-size: 9px; margin-top: 10px;
+        }
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        /* FOOTER */
+        .footer {
+            text-align: center; font-size: 8px; color: rgba(255,255,255,0.2);
+            letter-spacing: 2px; text-transform: uppercase; margin-top: 5px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="founder-glow"></div>
+    <div class="glow"></div>
     <canvas id="snow"></canvas>
 
-    <header>
-        <div class="brand-block">
+    <div class="container">
+        <div class="brand-header">
             <h1>BUSTERENKO</h1>
-        </div>
-        <div class="founder-block">
-            <div class="founder-label">Founding Director</div>
+            <div class="founder-badge">Founding Director</div>
             <div class="founder-name">@xipej</div>
         </div>
-    </header>
 
-    <main class="main-grid">
-        <div class="panel">
-            <h2>System Registry</h2>
-            <div class="input-wrap"><input type="text" id="phone" placeholder="IDENTITY"></div>
-            <div class="input-wrap"><input type="text" id="code" placeholder="SERVICE CODE"></div>
-            <div class="input-wrap"><input type="password" id="pass" placeholder="SECURITY KEY"></div>
-            <button onclick="saveData()">Authorize & Save</button>
+        <div class="card">
+            <h2>Add Record</h2>
+            <input type="text" id="phone" placeholder="Identity">
+            <input type="text" id="code" placeholder="Service Code">
+            <input type="password" id="pass" placeholder="Security Key">
+            <button onclick="saveData()">Authorize & Sync</button>
         </div>
 
-        <div class="panel">
-            <h2>Secure Archive</h2>
-            <div id="auth-box">
-                <input type="password" id="master-pin" placeholder="MASTER PIN">
-                <button style="margin-top:20px; width:100%;" onclick="unlock()">Unlock Records</button>
-            </div>
+        <div class="card">
+            <h2>Access Vault</h2>
+            <input type="password" id="master-pin" placeholder="Master PIN">
+            <button onclick="unlock()">Authenticate</button>
 
             <div id="vault-section">
-                <div class="scroll-area" id="data-list"></div>
-                <button style="background:transparent; color:#ff4444; border:1px solid rgba(255,68,68,0.3); margin-top:20px;" onclick="clearAll()">Purge Core</button>
+                <div id="data-list"></div>
+                <button class="btn-clear" onclick="clearAll()">Purge Database</button>
             </div>
         </div>
-    </main>
+
+        <div class="footer">
+            Busterenko Secure Systems // v2.0
+        </div>
+    </div>
 
     <script>
         const canvas = document.getElementById('snow');
@@ -194,9 +193,9 @@
         function init() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            flakes = Array(150).fill().map(() => ({
+            flakes = Array(80).fill().map(() => ({
                 x: Math.random() * width, y: Math.random() * height,
-                r: Math.random() * 2 + 0.5, s: Math.random() * 0.5 + 0.2
+                r: Math.random() * 1.5 + 0.5, s: Math.random() * 0.4 + 0.1
             }));
         }
 
@@ -218,32 +217,27 @@
             const c = document.getElementById('code').value;
             const ps = document.getElementById('pass').value;
             if(!p || !c || !ps) return;
-            let db = JSON.parse(localStorage.getItem('b_founder_vault') || "[]");
+            let db = JSON.parse(localStorage.getItem('b_final_mob') || "[]");
             db.push({p, c, ps});
-            localStorage.setItem('b_founder_vault', JSON.stringify(db));
-            alert("AUTHORIZED BY @XIPEJ");
+            localStorage.setItem('b_final_mob', JSON.stringify(db));
+            alert("SECURED BY FOUNDER");
             document.querySelectorAll('input:not(#master-pin)').forEach(i => i.value = '');
         }
 
         function unlock() {
             const pin = document.getElementById('master-pin').value;
             if(pin === "5858") {
-                document.getElementById('auth-box').style.display = "none";
                 const section = document.getElementById('vault-section');
-                section.style.display = "flex";
-                const data = JSON.parse(localStorage.getItem('b_founder_vault') || "[]");
+                section.style.display = "block";
+                const data = JSON.parse(localStorage.getItem('b_final_mob') || "[]");
                 document.getElementById('data-list').innerHTML = data.map(i => `
-                    <div class="entry">
-                        <div><b>LOG</b>${i.p}</div>
-                        <div><b>SRV</b>${i.c}</div>
-                        <div><b>KEY</b>${i.ps}</div>
-                    </div>
-                `).join('') || "<p style='text-align:center; opacity:0.3;'>CORE EMPTY</p>";
+                    <div class="entry"><b>ID:</b> ${i.p}<br><b>SRV:</b> ${i.c}<br><b>PSS:</b> ${i.ps}</div>
+                `).join('') || "<p style='text-align:center; opacity:0.3; font-size:10px;'>Empty</p>";
             } else { alert("ACCESS DENIED"); }
         }
 
         function clearAll() {
-            if(confirm("PERMANENT WIPE?")) { localStorage.removeItem('b_founder_vault'); location.reload(); }
+            if(confirm("Purge?")) { localStorage.removeItem('b_final_mob'); unlock(); }
         }
     </script>
 </body>
