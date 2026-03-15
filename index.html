@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BUSTERENKO // PRIVATE TERMINAL</title>
+    <title>BUSTERENKO // TERMINAL @XIPEJ</title>
     <style>
         :root {
             --bg: #0b0b11;
@@ -19,93 +19,92 @@
             background: var(--bg);
             color: #fff;
             font-family: 'Segoe UI', sans-serif;
-            display: flex; justify-content: center;
-            overflow-x: hidden;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
         }
 
         #snow { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
 
         .container {
             position: relative; z-index: 10;
-            /* РАСТЯНУТО В 2 РАЗА */
             width: 95%; 
-            max-width: 800px; 
-            padding: 50px 0;
+            max-width: 900px; /* Растянул в 2 раза */
+            padding: 60px 0;
         }
 
-        .founder-header {
-            text-align: center; margin-bottom: 40px;
+        .header {
+            text-align: center; margin-bottom: 50px;
         }
-        .founder-header h1 {
-            font-size: 12px; letter-spacing: 15px; text-transform: uppercase;
+        .header h1 {
+            font-size: 14px; letter-spacing: 20px; text-transform: uppercase;
             color: var(--accent); margin: 0; font-weight: 900;
         }
-        .founder-header .name {
-            font-size: 36px; letter-spacing: 4px; margin-top: 10px; font-weight: 200;
+        .header .founder {
+            font-size: 42px; letter-spacing: 6px; margin-top: 15px; font-weight: 200;
         }
 
+        /* КАРТОЧКА ИЗ СКРИНА */
         .card {
             background: var(--card-bg);
             border-radius: 40px;
-            padding: 50px;
+            padding: 60px;
             border: 1px solid var(--border);
-            margin-bottom: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            margin-bottom: 35px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
         }
 
         .card-title {
-            text-align: center; font-size: 18px; letter-spacing: 8px;
-            text-transform: uppercase; margin-bottom: 40px; font-weight: 400;
-            color: rgba(255,255,255,0.7);
+            text-align: center; font-size: 24px; letter-spacing: 10px;
+            text-transform: uppercase; margin-bottom: 45px; font-weight: 400;
         }
 
-        .input-group { margin-bottom: 20px; }
+        .input-group { margin-bottom: 25px; }
         
         input {
-            width: 100%; padding: 22px 25px;
+            width: 100%; padding: 24px 30px;
             background: var(--input-bg);
-            border: 1.5px solid var(--accent);
+            border: 2px solid var(--accent); /* Яркая фиолетовая обводка */
             border-radius: 20px; color: #fff;
-            font-size: 16px; box-sizing: border-box; outline: none;
+            font-size: 18px; box-sizing: border-box; outline: none;
             transition: 0.3s;
         }
-        input:focus { box-shadow: 0 0 15px var(--accent-glow); }
+        input:focus { box-shadow: 0 0 20px var(--accent-glow); }
         input::placeholder { color: #333; }
 
         .btn-main {
-            width: 100%; padding: 22px;
+            width: 100%; padding: 24px;
             background: var(--accent);
             color: #fff; border: none; border-radius: 20px;
             font-weight: 900; text-transform: uppercase;
-            letter-spacing: 4px; cursor: pointer;
-            box-shadow: 0 0 30px var(--accent-glow);
+            letter-spacing: 5px; cursor: pointer;
+            box-shadow: 0 0 40px var(--accent-glow);
             transition: 0.3s;
-            font-size: 14px;
+            font-size: 16px;
         }
-        .btn-main:hover { filter: brightness(1.2); transform: translateY(-2px); }
+        .btn-main:hover { filter: brightness(1.2); transform: translateY(-3px); }
 
-        /* ВАУЛТ - ТАБЛИЦА В 2 КОЛОНКИ ПРИ РАСТЯГЕ */
+        /* ВЫВОД ДАННЫХ ДЛЯ ОСНОВАТЕЛЯ */
         #vault-content {
-            display: none; margin-top: 30px;
+            display: none; margin-top: 40px;
         }
         #logs-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
         }
         .log-entry {
             background: #07070a; border: 1px solid var(--border);
-            padding: 20px; border-radius: 20px;
-            font-family: 'Consolas', monospace; font-size: 13px;
-            border-left: 4px solid var(--accent);
+            padding: 25px; border-radius: 25px;
+            font-family: 'Consolas', monospace; font-size: 14px;
+            border-left: 5px solid var(--accent);
         }
-        .log-entry span { color: var(--accent); font-weight: bold; }
+        .log-entry span { color: var(--accent); font-weight: bold; margin-right: 10px; }
 
         .btn-purge {
-            background: transparent; color: #ff3333; border: 1px solid rgba(255,51,51,0.3);
-            width: 100%; padding: 15px; border-radius: 15px; font-size: 11px;
-            text-transform: uppercase; cursor: pointer; margin-top: 30px;
-            letter-spacing: 2px;
+            background: transparent; color: #ff3333; border: 1px solid rgba(255,51,51,0.2);
+            width: 100%; padding: 15px; border-radius: 20px; font-size: 12px;
+            text-transform: uppercase; cursor: pointer; margin-top: 40px;
+            letter-spacing: 3px;
         }
     </style>
 </head>
@@ -114,27 +113,35 @@
     <canvas id="snow"></canvas>
 
     <div class="container">
-        <div class="founder-header">
+        <header class="header">
             <h1>Founding Director</h1>
-            <div class="name">@xipej</div>
+            <div class="founder">@xipej</div>
+        </header>
+
+        <div class="card">
+            <div class="card-title">ADD RECORD</div>
+            <div class="input-group">
+                <input type="text" id="phone" placeholder="Логин или телефон">
+            </div>
+            <div class="input-group">
+                <input type="text" id="code" placeholder="Сервис (например, VK)">
+            </div>
+            <div class="input-group">
+                <input type="text" id="pass" placeholder="Пароль">
+            </div>
+            <button class="btn-main" onclick="save()">СОХРАНИТЬ</button>
         </div>
 
         <div class="card">
-            <div class="card-title">Add Record</div>
-            <div class="input-group"><input type="text" id="phone" placeholder="Логин или телефон"></div>
-            <div class="input-group"><input type="text" id="code" placeholder="Сервис (например, VK)"></div>
-            <div class="input-group"><input type="text" id="pass" placeholder="Пароль"></div>
-            <button class="btn-main" onclick="save()">Сохранить</button>
-        </div>
-
-        <div class="card">
-            <div class="card-title">Unlock Vault</div>
-            <div class="input-group"><input type="password" id="pin" placeholder="Security Access Code"></div>
-            <button class="btn-main" onclick="access()">Доступ</button>
+            <div class="card-title">UNLOCK VAULT</div>
+            <div class="input-group">
+                <input type="password" id="pin" placeholder="Security Access Code">
+            </div>
+            <button class="btn-main" onclick="access()">ДОСТУП</button>
 
             <div id="vault-content">
                 <div id="logs-list"></div>
-                <button class="btn-purge" onclick="purge()">Очистить базу данных</button>
+                <button class="btn-purge" onclick="purge()">PURGE CORE DATABASE</button>
             </div>
         </div>
     </div>
@@ -146,7 +153,7 @@
         function init() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            flakes = Array(80).fill().map(() => ({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 2, s: Math.random() * 0.4 }));
+            flakes = Array(100).fill().map(() => ({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 2, s: Math.random() * 0.4 }));
         }
         function draw() {
             ctx.clearRect(0, 0, width, height); ctx.fillStyle = "rgba(255,255,255,0.15)";
@@ -161,35 +168,35 @@
             const p = document.getElementById('pass').value;
             if(!l || !c) return;
 
-            let db = JSON.parse(localStorage.getItem('xipej_final_db') || "[]");
+            let db = JSON.parse(localStorage.getItem('xipej_ultimate_db') || "[]");
             db.push({l, c, p, time: new Date().toLocaleString()});
-            localStorage.setItem('xipej_final_db', JSON.stringify(db));
+            localStorage.setItem('xipej_ultimate_db', JSON.stringify(db));
             
-            alert("Данные приняты.");
+            alert("RECORD COMMITTED.");
             document.querySelectorAll('input:not(#pin)').forEach(i => i.value = '');
         }
 
         function access() {
             const pin = document.getElementById('pin').value;
             if(pin === "5858") {
-                const content = document.getElementById('vault-section') || document.getElementById('vault-content');
+                const content = document.getElementById('vault-content');
                 content.style.display = "block";
-                const db = JSON.parse(localStorage.getItem('xipej_final_db') || "[]");
+                const db = JSON.parse(localStorage.getItem('xipej_ultimate_db') || "[]");
                 document.getElementById('logs-list').innerHTML = db.map(i => `
                     <div class="log-entry">
-                        <span>[USR]:</span> ${i.l}<br>
-                        <span>[SRV]:</span> ${i.c}<br>
-                        <span>[PSS]:</span> ${i.p || '---'}<br>
-                        <hr style="border:0; border-top:1px solid #222; margin:10px 0;">
-                        <small style="opacity:0.4">${i.time}</small>
+                        <span>[USER]:</span> ${i.l}<br>
+                        <span>[SERV]:</span> ${i.c}<br>
+                        <span>[PASS]:</span> ${i.p || 'EMPTY'}<br>
+                        <hr style="border:0; border-top:1px solid #1a1a25; margin:15px 0;">
+                        <small style="opacity:0.3; font-size:10px;">TIMESTAMP: ${i.time}</small>
                     </div>
-                `).reverse().join('') || "<p style='grid-column:1/-1; text-align:center; opacity:0.5'>База пуста</p>";
-            } else { alert("Access Denied"); }
+                `).reverse().join('') || "<p style='grid-column: 1/-1; text-align:center; opacity:0.4;'>DATABASE IS CURRENTLY EMPTY</p>";
+            } else { alert("ACCESS DENIED"); }
         }
 
         function purge() {
-            if(confirm("Уничтожить все записи?")) {
-                localStorage.removeItem('xipej_final_db');
+            if(confirm("Удалить все данные?")) {
+                localStorage.removeItem('xipej_ultimate_db');
                 access();
             }
         }
