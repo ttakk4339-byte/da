@@ -3,113 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BUSTERENKO // ELITE TERMINAL</title>
+    <title>TERMINAL SYSTEM</title>
     <style>
         :root {
             --bg: #0b0b11;
             --accent: #8b22ff;
-            --accent-glow: rgba(139, 34, 255, 0.4);
-            --card-bg: #11111a;
+            --accent-glow: rgba(139, 34, 255, 0.5);
+            --card-bg: #12121b;
             --input-bg: #0d0d14;
-            --border: #222230;
+            --border: #1e1e2a;
         }
 
         body, html {
             margin: 0; padding: 0;
             background: var(--bg);
             color: #fff;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
         }
 
-        #snow { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
+        canvas#snow { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
 
         .container {
             position: relative; z-index: 10;
-            width: 95%; 
-            max-width: 900px; /* Тот самый широкий формат */
-            padding: 60px 0;
-        }
-
-        /* ХЕДЕР ОСНОВАТЕЛЯ */
-        .header {
-            text-align: center; margin-bottom: 50px;
-        }
-        .header h1 {
-            font-size: 14px; letter-spacing: 20px; text-transform: uppercase;
-            color: var(--accent); margin: 0; font-weight: 900;
-        }
-        .header .founder {
-            font-size: 42px; letter-spacing: 6px; margin-top: 15px; font-weight: 200;
+            width: 100%;
+            max-width: 450px; /* Сузил под формат мобильного приложения/скриншота */
+            padding: 40px 20px;
         }
 
         /* КАРТОЧКИ */
         .card {
             background: var(--card-bg);
-            border-radius: 40px;
-            padding: 60px;
+            border-radius: 35px;
+            padding: 40px 35px;
             border: 1px solid var(--border);
-            margin-bottom: 35px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-            backdrop-filter: blur(20px);
+            margin-bottom: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
         .card-title {
-            text-align: center; font-size: 24px; letter-spacing: 10px;
-            text-transform: uppercase; margin-bottom: 45px; font-weight: 400;
-            color: rgba(255,255,255,0.8);
+            text-align: center; 
+            font-size: 22px; 
+            letter-spacing: 4px;
+            text-transform: uppercase; 
+            margin-bottom: 35px; 
+            font-weight: 500;
+            color: #d1d1d1;
         }
 
-        .input-group { margin-bottom: 25px; }
+        .input-group { margin-bottom: 20px; }
         
-        /* ИНПУТЫ КАК НА СКРИНЕ */
+        /* ИНПУТЫ */
         input {
-            width: 100%; padding: 24px 30px;
+            width: 100%; 
+            padding: 20px 25px;
             background: var(--input-bg);
-            border: 2px solid var(--accent);
-            border-radius: 20px; color: #fff;
-            font-size: 18px; box-sizing: border-box; outline: none;
-            transition: 0.3s;
+            border: 1px solid var(--border); /* В обычном состоянии тонкая граница */
+            border-radius: 18px; 
+            color: #fff;
+            font-size: 16px; 
+            box-sizing: border-box; 
+            outline: none;
+            transition: 0.2s ease;
         }
-        input:focus { box-shadow: 0 0 20px var(--accent-glow); }
-        input::placeholder { color: #333; }
 
-        /* КНОПКА СОХРАНИТЬ */
+        /* Эффект свечения при фокусе, как на верхнем инпуте скрина */
+        input:focus { 
+            border-color: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow); 
+        }
+
+        input::placeholder { color: #4a4a4a; }
+
+        /* КНОПКА */
         .btn-main {
-            width: 100%; padding: 24px;
+            width: 100%; 
+            padding: 20px;
             background: var(--accent);
-            color: #fff; border: none; border-radius: 20px;
-            font-weight: 900; text-transform: uppercase;
-            letter-spacing: 5px; cursor: pointer;
-            box-shadow: 0 0 40px var(--accent-glow);
+            color: #fff; 
+            border: none; 
+            border-radius: 18px;
+            font-weight: 700; 
+            text-transform: uppercase;
+            letter-spacing: 2px; 
+            cursor: pointer;
             transition: 0.3s;
             font-size: 16px;
+            margin-top: 10px;
         }
-        .btn-main:hover { filter: brightness(1.2); transform: translateY(-3px); }
+        .btn-main:hover { filter: brightness(1.1); }
 
-        /* ТАБЛИЦА ЛОГОВ (ДЛЯ ОСНОВАТЕЛЯ) */
-        #vault-content {
-            display: none; margin-top: 40px;
-        }
-        #logs-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: 20px;
-        }
+        /* Скрытая секция логов */
+        #vault-content { display: none; margin-top: 30px; }
         .log-entry {
             background: #07070a; border: 1px solid var(--border);
-            padding: 25px; border-radius: 25px;
-            font-family: 'Consolas', monospace; font-size: 14px;
-            border-left: 5px solid var(--accent);
-        }
-        .log-entry span { color: var(--accent); font-weight: bold; margin-right: 10px; }
-
-        .btn-purge {
-            background: transparent; color: #ff3333; border: 1px solid rgba(255,51,51,0.2);
-            width: 100%; padding: 15px; border-radius: 20px; font-size: 12px;
-            text-transform: uppercase; cursor: pointer; margin-top: 40px;
-            letter-spacing: 3px;
+            padding: 15px; border-radius: 15px; margin-bottom: 10px;
+            font-family: monospace; font-size: 13px;
         }
     </style>
 </head>
@@ -118,11 +108,6 @@
     <canvas id="snow"></canvas>
 
     <div class="container">
-        <header class="header">
-            <h1>Founding Director</h1>
-            <div class="founder">@xipej</div>
-        </header>
-
         <div class="card">
             <div class="card-title">ADD RECORD</div>
             <div class="input-group">
@@ -140,74 +125,64 @@
         <div class="card">
             <div class="card-title">UNLOCK VAULT</div>
             <div class="input-group">
-                <input type="password" id="pin" placeholder="Security Access Code">
+                <input type="password" id="pin" placeholder="Введите код доступа">
             </div>
             <button class="btn-main" onclick="access()">ДОСТУП</button>
 
             <div id="vault-content">
                 <div id="logs-list"></div>
-                <button class="btn-purge" onclick="purge()">PURGE CORE DATABASE</button>
+                <button style="margin-top:20px; opacity:0.5; background:none; color:red; border:none; cursor:pointer; width:100%;" onclick="purge()">Очистить базу</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Снег
+        // Снег (фон)
         const canvas = document.getElementById('snow');
         const ctx = canvas.getContext('2d');
         let width, height, flakes = [];
         function init() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            flakes = Array(100).fill().map(() => ({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 2, s: Math.random() * 0.4 }));
+            flakes = Array(80).fill().map(() => ({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 2, s: Math.random() * 0.5 }));
         }
         function draw() {
-            ctx.clearRect(0, 0, width, height); ctx.fillStyle = "rgba(255,255,255,0.15)";
+            ctx.clearRect(0, 0, width, height); ctx.fillStyle = "rgba(255,255,255,0.1)";
             ctx.beginPath(); flakes.forEach(f => { ctx.moveTo(f.x, f.y); ctx.arc(f.x, f.y, f.r, 0, Math.PI*2); f.y += f.s; if(f.y > height) f.y = -5; });
             ctx.fill(); requestAnimationFrame(draw);
         }
         window.onresize = init; init(); draw();
 
-        // Сохранение (теперь можно и пустые)
         function save() {
             const l = document.getElementById('phone').value || "---";
             const c = document.getElementById('code').value || "---";
             const p = document.getElementById('pass').value || "---";
-
-            let db = JSON.parse(localStorage.getItem('xipej_final_boss_db') || "[]");
+            let db = JSON.parse(localStorage.getItem('vault_db') || "[]");
             db.push({l, c, p, time: new Date().toLocaleString()});
-            localStorage.setItem('xipej_final_boss_db', JSON.stringify(db));
-            
-            alert("RECORD SAVED");
+            localStorage.setItem('vault_db', JSON.stringify(db));
+            alert("ЗАПИСЬ СОХРАНЕНА");
             document.querySelectorAll('input:not(#pin)').forEach(i => i.value = '');
         }
 
-        // Доступ по 5858
         function access() {
             const pin = document.getElementById('pin').value;
             if(pin === "5858") {
                 const content = document.getElementById('vault-content');
                 content.style.display = "block";
-                const db = JSON.parse(localStorage.getItem('xipej_final_boss_db') || "[]");
+                const db = JSON.parse(localStorage.getItem('vault_db') || "[]");
                 document.getElementById('logs-list').innerHTML = db.map(i => `
                     <div class="log-entry">
-                        <span>[USER]:</span> ${i.l}<br>
-                        <span>[SERV]:</span> ${i.c}<br>
-                        <span>[PASS]:</span> ${i.p}<br>
-                        <hr style="border:0; border-top:1px solid #1a1a25; margin:15px 0;">
-                        <small style="opacity:0.3; font-size:10px;">TIMESTAMP: ${i.time}</small>
+                        <b style="color:#8b22ff">U:</b> ${i.l} | <b style="color:#8b22ff">S:</b> ${i.c}<br>
+                        <b style="color:#8b22ff">P:</b> ${i.p}
                     </div>
-                `).reverse().join('') || "<p style='grid-column: 1/-1; text-align:center; opacity:0.4;'>DATABASE EMPTY</p>";
+                `).reverse().join('') || "<p style='text-align:center; opacity:0.5;'>ПУСТО</p>";
             } else { 
-                alert("ACCESS DENIED"); 
+                alert("ОШИБКА ДОСТУПА"); 
             }
         }
 
         function purge() {
-            if(confirm("Удалить всё навсегда?")) {
-                localStorage.removeItem('xipej_final_boss_db');
-                access();
-            }
+            if(confirm("Удалить всё?")) { localStorage.removeItem('vault_db'); access(); }
         }
     </script>
 </body>
