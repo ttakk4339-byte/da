@@ -3,288 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime Vault</title>
+    <title>Premium Cloud Vault</title>
     <style>
-        /* Основные матовые цвета и градиент */
         :root {
-            --bg-color: #1a1a2e; /* Глубокий темно-синий/фиолетовый */
-            --panel-color: rgba(45, 20, 70, 0.85); /* Матовый фиолетовый с прозрачностью */
-            --accent-color: #9d4edd; /* Яркий фиолетовый для акцентов */
-            --text-color: #e0aaff; /* Светло-лавандовый текст */
-            --input-bg: rgba(20, 10, 30, 0.6);
-            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --bg: #0b0e14;
+            --accent: #bc13fe;
+            --glass: rgba(25, 25, 35, 0.7);
+            --text: #e0b1cb;
+            --input-focus: #d670ff;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden; /* Чтобы снег не создавал прокрутку */
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow-x: hidden;
-            position: relative;
         }
 
-        /* --- Аниме элементы (Нашки) --- */
-        
-        /* Персонаж слева */
-        body::before {
-            content: '';
+        /* --- ЭФФЕКТ СНЕГА --- */
+        #snow-canvas {
             position: fixed;
-            bottom: 0;
-            left: -50px;
-            width: 300px;
-            height: 400px;
-            /* Замени ссылку ниже на свою, если эта перестанет работать */
-            background-image: url('https://i.imgur.com/8Q4N4Xw.png'); 
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: bottom left;
-            opacity: 0.7;
-            z-index: 1;
-            pointer-events: none; /* Чтобы не мешала кликам */
-        }
-
-        /* Персонаж справа */
-        body::after {
-            content: '';
-            position: fixed;
-            bottom: 0;
-            right: -50px;
-            width: 300px;
-            height: 450px;
-            /* Замени ссылку ниже на свою */
-            background-image: url('https://i.imgur.com/w9zXzY7.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: bottom right;
-            opacity: 0.7;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        /* --- Анимация падающей сакуры на фоне --- */
-        @keyframes fall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-        }
-
-        .petal {
-            position: fixed;
-            top: -10px;
-            background-color: #ffb7c5; /* Цвет лепестков */
-            border-radius: 150% 0 150% 0;
-            opacity: 0.8;
-            pointer-events: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 0;
+            pointer-events: none;
         }
 
-        /* --- Основной контейнер (Матовый эффект) --- */
+        /* --- КОНТЕНТ --- */
         .container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            z-index: 10; /* Поверх фона и персонажей */
+            position: relative;
+            z-index: 10;
             width: 100%;
             max-width: 400px;
             padding: 20px;
         }
 
         .card {
-            background: var(--panel-color);
-            backdrop-filter: blur(10px); /* Эффект матового стекла */
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 15px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 25px;
-            box-shadow: var(--shadow);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 
+                        inset 0 0 20px rgba(188, 19, 254, 0.05);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
         }
 
-        h3, h4 {
-            text-align: center;
-            color: #fff;
+        h2 {
             margin-top: 0;
+            color: #fff;
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px var(--accent-color);
+            font-size: 18px;
+            margin-bottom: 20px;
         }
 
         input {
             width: 100%;
-            padding: 12px 15px;
+            padding: 14px;
             margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid rgba(157, 78, 221, 0.3);
-            background: var(--input-bg);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(188, 19, 254, 0.3);
+            border-radius: 12px;
             color: #fff;
             box-sizing: border-box;
+            outline: none;
             transition: 0.3s;
         }
 
         input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 10px rgba(157, 78, 221, 0.5);
+            border-color: var(--accent);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background-color: var(--accent-color);
+            padding: 14px;
+            background: linear-gradient(135deg, #bc13fe, #7a12ff);
             border: none;
             color: white;
-            border-radius: 8px;
+            font-weight: 600;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: bold;
-            text-transform: uppercase;
             transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-top: 10px;
         }
 
         button:hover {
-            background-color: #7b2cbf;
-            box-shadow: 0 0 15px rgba(157, 78, 221, 0.7);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(188, 19, 254, 0.4);
+            filter: brightness(1.1);
         }
 
-        #secret-content {
+        /* --- ВЫВОД ДАННЫХ --- */
+        #vault-section {
             display: none;
             margin-top: 20px;
-            border-top: 2px solid var(--accent-color);
-            padding-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
         }
 
-        .account-item {
-            background: rgba(0, 0, 0, 0.3);
+        .entry {
+            background: rgba(255, 255, 255, 0.03);
             padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 2px solid var(--accent);
             font-size: 14px;
-            border-left: 4px solid var(--accent-color);
-            position: relative;
-            word-break: break-all;
+            animation: fadeIn 0.5s ease;
         }
 
-        .account-item b {
-            color: var(--accent-color);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .clear-btn {
-            background-color: #5a189a;
-            font-size: 12px;
+        .entry b { color: var(--accent); display: inline-block; width: 70px; }
+
+        /* Кастомный скроллбар */
+        #vault-section::-webkit-scrollbar { width: 4px; }
+        #vault-section::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        .btn-clear {
+            background: transparent;
+            border: 1px solid rgba(255, 50, 50, 0.4);
+            color: rgba(255, 50, 50, 0.8);
+            font-size: 11px;
             margin-top: 20px;
         }
-        .clear-btn:hover { background-color: #3c096c; }
-
+        .btn-clear:hover { background: rgba(255, 50, 50, 0.1); border-color: #ff3232; }
     </style>
 </head>
 <body>
 
-    <script>
-        function createPetal() {
-            const petal = document.createElement('div');
-            petal.classList.add('petal');
-            petal.style.left = Math.random() * 100 + 'vw';
-            petal.style.animationDuration = Math.random() * 3 + 2 + 's'; // 2-5s
-            
-            // Случайный размер
-            const size = Math.random() * 10 + 5 + 'px';
-            petal.style.width = size;
-            petal.style.height = size;
-
-            document.body.appendChild(petal);
-
-            setTimeout(() => {
-                petal.remove();
-            }, 5000);
-        }
-        setInterval(createPetal, 300); // Создавать каждые 0.3 сек
-    </script>
+    <canvas id="snow-canvas"></canvas>
 
     <div class="container">
         <div class="card">
-            <h3>Add Login</h3>
-            <input type="text" id="phone" placeholder="Phone / Login">
-            <input type="text" id="code" placeholder="Service Code">
-            <input type="password" id="pass" placeholder="Password">
-            <button onclick="saveData()">Save to Vault</button>
+            <h2>Add Record</h2>
+            <input type="text" id="phone" placeholder="Логин или телефон">
+            <input type="text" id="service" placeholder="Сервис (например, VK)">
+            <input type="password" id="pass" placeholder="Пароль">
+            <button onclick="saveData()">Сохранить</button>
         </div>
 
         <div class="card">
-            <h3>Vault Access</h3>
-            <input type="password" id="admin-pass" placeholder="Enter Access Code">
-            <button onclick="checkAccess()">Unlock</button>
+            <h2>Unlock Vault</h2>
+            <input type="password" id="master-pin" placeholder="Введите 5858">
+            <button onclick="unlock()">Доступ</button>
 
-            <div id="secret-content">
-                <h4>Stored Data</h4>
-                <div id="list"></div>
-                <button onclick="clearData()" class="clear-btn">Clear local storage</button>
+            <div id="vault-section">
+                <div id="data-list"></div>
+                <button class="btn-clear" onclick="clearAll()">Удалить все данные</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Сохранение данных в LocalStorage
-        function saveData() {
-            const phone = document.getElementById('phone').value;
-            const code = document.getElementById('code').value;
-            const pass = document.getElementById('pass').value;
+        // --- ЛОГИКА СНЕГА ---
+        const canvas = document.getElementById('snow-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, flakes = [];
 
-            if(!phone || !code || !pass) return alert("Senpai, fill all fields!");
-
-            const entry = { phone, code, pass };
-            // Получаем старые данные или создаем пустой массив
-            let data = JSON.parse(localStorage.getItem('anime_vault_data') || "[]");
-            data.push(entry);
-            // Сохраняем обратно
-            localStorage.setItem('anime_vault_data', JSON.stringify(data));
-            
-            alert("Data saved locally!");
-            // Очистка полей
-            document.getElementById('phone').value = "";
-            document.getElementById('code').value = "";
-            document.getElementById('pass').value = "";
-        }
-
-        // Проверка кода доступа
-        function checkAccess() {
-            const adminPass = document.getElementById('admin-pass').value;
-            const content = document.getElementById('secret-content');
-            const listDiv = document.getElementById('list');
-
-            // Твой секретный код
-            if (adminPass === "5858") {
-                content.style.display = "block";
-                const data = JSON.parse(localStorage.getItem('anime_vault_data') || "[]");
-                
-                if(data.length === 0) {
-                    listDiv.innerHTML = "<p style='text-align:center; opacity:0.5;'>Vault is empty.</p>";
-                } else {
-                    listDiv.innerHTML = data.map(item => `
-                        <div class="account-item">
-                            <b>Log:</b> ${item.phone}<br>
-                            <b>Srv:</b> ${item.code}<br>
-                            <b>Pass:</b> ${item.pass}
-                        </div>
-                    `).join('');
-                }
-                // Плавно скроллим вниз к данным
-                setTimeout(()=> content.scrollIntoView({behavior: "smooth"}), 100);
-            } else {
-                alert("Wrong code, baka!");
-                content.style.display = "none";
-                document.getElementById('admin-pass').value = "";
+        function initSnow() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            flakes = [];
+            for (let i = 0; i < 150; i++) {
+                flakes.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    r: Math.random() * 3 + 1,
+                    d: Math.random() * 1,
+                    speed: Math.random() * 1 + 0.5
+                });
             }
         }
 
-        // Очистка
-        function clearData() {
-            if(confirm("Are you sure? All local data will be deleted.")) {
-                localStorage.removeItem('anime_vault_data');
-                checkAccess(); // Обновить вид (покажет пустоту)
+        function drawSnow() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+            ctx.beginPath();
+            for (let f of flakes) {
+                ctx.moveTo(f.x, f.y);
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2, true);
+            }
+            ctx.fill();
+            updateSnow();
+        }
+
+        function updateSnow() {
+            for (let f of flakes) {
+                f.y += f.speed;
+                f.x += Math.sin(f.y / 50);
+                if (f.y > height) f.y = -10, f.x = Math.random() * width;
+            }
+        }
+
+        function animate() {
+            drawSnow();
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', initSnow);
+        initSnow();
+        animate();
+
+        // --- ЛОГИКА ХРАНИЛИЩА ---
+        function saveData() {
+            const p = document.getElementById('phone').value;
+            const s = document.getElementById('service').value;
+            const ps = document.getElementById('pass').value;
+
+            if(!p || !s || !ps) return alert("Заполни все поля, бро");
+
+            let storage = JSON.parse(localStorage.getItem('cloud_vault') || "[]");
+            storage.push({ p, s, ps });
+            localStorage.setItem('cloud_vault', JSON.stringify(storage));
+            
+            alert("Данные в сейфе!");
+            document.querySelectorAll('input').forEach(i => i.value = '');
+        }
+
+        function unlock() {
+            const pin = document.getElementById('master-pin').value;
+            const section = document.getElementById('vault-section');
+            const list = document.getElementById('data-list');
+
+            if(pin === "5858") {
+                section.style.display = "block";
+                const data = JSON.parse(localStorage.getItem('cloud_vault') || "[]");
+                
+                if(data.length === 0) {
+                    list.innerHTML = "<p style='text-align:center; font-size: 12px; opacity: 0.5;'>Сейф пуст</p>";
+                } else {
+                    list.innerHTML = data.map(item => `
+                        <div class="entry">
+                            <b>СЕРВИС:</b> ${item.s}<br>
+                            <b>ЛОГИН:</b> ${item.p}<br>
+                            <b>ПАСС:</b> ${item.ps}
+                        </div>
+                    `).join('');
+                }
+            } else {
+                alert("Доступ запрещен!");
+                section.style.display = "none";
+            }
+        }
+
+        function clearAll() {
+            if(confirm("Реально всё стереть?")) {
+                localStorage.removeItem('cloud_vault');
+                unlock();
             }
         }
     </script>
