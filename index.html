@@ -3,215 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Busterenko Security Group | Terminal</title>
+    <title>Busterenko Cloud Vault</title>
     <style>
         :root {
-            --bsg-blue: #0a192f;        /* Глубокий корпоративный синий */
-            --bsg-accent: #10b981;      /* Изумрудный (безопасность/стабильность) */
-            --bsg-silver: #94a3b8;      /* Текст */
-            --bsg-border: #1e293b;      /* Границы */
-            --bsg-card: #111827;        /* Фон карточек */
+            --bg: #050507;
+            --accent: #a855f7; /* Сочный фиолетовый */
+            --accent-glow: rgba(168, 85, 247, 0.4);
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            background: var(--bsg-blue);
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            color: #f1f5f9;
+            background: var(--bg);
+            font-family: 'Syncopate', sans-serif; /* Футуристичный шрифт */
+            font-family: 'Segoe UI', sans-serif;
+            color: #fff;
+            overflow: hidden;
             display: flex; justify-content: center; align-items: center;
         }
 
-        /* Фоновый паттерн - строгие линии вместо снега */
-        #bg-pattern {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0);
-            background-size: 40px 40px;
+        /* --- ТОТ САМЫЙ СНЕГ --- */
+        #snow {
+            position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none;
+        }
+
+        /* --- ЖИДКИЙ ГЛАЗИК (Градиентные пятна на фоне) --- */
+        .blob {
+            position: absolute;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            filter: blur(80px);
             z-index: 0;
+            animation: move 15s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(-20%, -20%); }
+            to { transform: translate(20%, 20%); }
         }
 
         .container {
             position: relative; z-index: 10;
-            width: 100%; max-width: 420px; padding: 20px;
+            width: 100%; max-width: 400px; padding: 20px;
         }
 
-        .header {
-            text-align: center; margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 1.5rem; font-weight: 800; letter-spacing: -0.025em;
-            margin: 0; color: #fff; text-transform: uppercase;
-        }
-
-        .header .badge {
-            display: inline-block; background: var(--bsg-accent);
-            color: var(--bsg-blue); font-size: 10px; font-weight: 800;
-            padding: 2px 8px; border-radius: 4px; vertical-align: middle;
-            margin-left: 8px;
-        }
-
-        .header p {
-            font-size: 12px; color: var(--bsg-silver); margin-top: 8px;
-        }
-
+        /* --- GLASSMORPHISM CARD --- */
         .card {
-            background: var(--bsg-card);
-            border: 1px solid var(--bsg-border);
-            border-radius: 12px; padding: 24px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3);
+            background: var(--glass);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 35px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
             margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
-        label {
-            display: block; font-size: 11px; color: var(--bsg-silver);
-            text-transform: uppercase; margin-bottom: 6px; font-weight: 600;
+        .card::before {
+            content: "";
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .brand-label {
+            text-align: center; margin-bottom: 25px;
+        }
+
+        .brand-label h1 {
+            font-size: 14px; letter-spacing: 5px; text-transform: uppercase;
+            color: var(--accent); margin: 0; font-weight: 900;
+            text-shadow: 0 0 15px var(--accent);
+        }
+
+        .brand-label p {
+            font-size: 9px; opacity: 0.5; letter-spacing: 2px; margin-top: 5px;
+        }
+
+        h2 {
+            font-size: 12px; text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 15px; color: rgba(255,255,255,0.7);
         }
 
         input {
-            width: 100%; padding: 12px; margin-bottom: 16px;
-            background: #030712; border: 1px solid var(--bsg-border);
-            border-radius: 6px; color: #fff; font-size: 14px;
-            box-sizing: border-box; transition: 0.2s;
+            width: 100%; padding: 15px; margin-bottom: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 14px; color: #fff;
+            box-sizing: border-box; outline: none; transition: 0.3s;
         }
 
         input:focus {
-            outline: none; border-color: var(--bsg-accent);
-            box-shadow: 0 0 0 1px var(--bsg-accent);
+            border-color: var(--accent);
+            background: rgba(168, 85, 247, 0.05);
         }
 
         button {
-            width: 100%; padding: 12px;
-            background: #fff; color: #000;
-            border: none; font-weight: 700; border-radius: 6px;
-            cursor: pointer; transition: 0.2s; font-size: 14px;
+            width: 100%; padding: 15px;
+            background: var(--accent);
+            border: none; color: white;
+            font-weight: 700; border-radius: 14px;
+            cursor: pointer; transition: 0.3s;
+            text-transform: uppercase; font-size: 12px; letter-spacing: 1px;
         }
 
-        button:hover { background: #e2e8f0; }
-
-        .btn-secondary {
-            background: var(--bsg-accent); color: var(--bsg-blue);
+        button:hover {
+            box-shadow: 0 0 20px var(--accent-glow);
+            transform: translateY(-2px);
         }
 
-        .btn-secondary:hover { opacity: 0.9; }
-
-        /* Vault List */
+        /* --- VAULT STYLES --- */
         #vault-section {
-            display: none; border-top: 1px solid var(--bsg-border);
-            margin-top: 20px; padding-top: 20px;
+            display: none; margin-top: 20px;
+            max-height: 250px; overflow-y: auto;
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
         }
 
-        .record {
-            background: #030712; border-left: 4px solid var(--bsg-accent);
-            padding: 12px; border-radius: 4px; margin-bottom: 10px;
-            font-family: 'Courier New', monospace; font-size: 12px;
+        .entry {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px; border-radius: 12px;
+            margin-bottom: 10px; border: 1px solid var(--border);
+            font-size: 13px;
         }
 
-        .record-label { color: var(--bsg-silver); margin-right: 5px; }
+        .entry b { color: var(--accent); margin-right: 5px; }
 
-        .footer {
-            text-align: center; font-size: 10px; color: var(--bsg-silver);
-            opacity: 0.5; margin-top: 40px;
-        }
-
-        .danger-zone {
-            margin-top: 20px; text-align: center;
-        }
-
-        .btn-danger {
-            background: transparent; border: 1px solid #ef4444; color: #ef4444;
-            font-size: 10px; cursor: pointer; padding: 4px 10px; border-radius: 4px;
+        .btn-clear {
+            background: transparent; color: #ff4d4d; border: 1px solid rgba(255,77,77,0.3);
+            margin-top: 10px; font-size: 9px;
         }
     </style>
 </head>
 <body>
 
-    <div id="bg-pattern"></div>
+    <div class="blob"></div>
+    <canvas id="snow"></canvas>
 
     <div class="container">
-        <div class="header">
-            <h1>Бустеренко<span class="badge">PRO</span></h1>
-            <p>Система защищенного хранения протоколов</p>
+        <div class="brand-label">
+            <h1>BUSTERENKO</h1>
+            <p>PRIVATE SECURE STORAGE</p>
         </div>
 
         <div class="card">
-            <label>Идентификатор</label>
-            <input type="text" id="phone" placeholder="User ID / Phone">
-            
-            <label>Сервисный код</label>
-            <input type="text" id="code" placeholder="Service Code">
-            
-            <label>Мастер-пароль</label>
-            <input type="password" id="pass" placeholder="••••••••">
-            
-            <button class="btn-secondary" onclick="saveData()">Внести в реестр</button>
+            <h2>Add Record</h2>
+            <input type="text" id="phone" placeholder="Login / Phone">
+            <input type="text" id="code" placeholder="Code">
+            <input type="password" id="pass" placeholder="Password">
+            <button onclick="saveData()">Save to Cloud</button>
         </div>
 
         <div class="card">
-            <label>Доступ к архиву</label>
-            <input type="password" id="master-pin" placeholder="Security PIN">
-            <button onclick="unlock()">Авторизация</button>
+            <h2>Unlock Vault</h2>
+            <input type="password" id="master-pin" placeholder="Master PIN">
+            <button onclick="unlock()">Access Terminal</button>
 
             <div id="vault-section">
                 <div id="data-list"></div>
-                <div class="danger-zone">
-                    <button class="btn-danger" onclick="clearAll()">Очистить базу данных</button>
-                </div>
+                <button class="btn-clear" onclick="clearAll()">Purge Database</button>
             </div>
-        </div>
-
-        <div class="footer">
-            © 2026 Группа компаний «Бустеренко». <br>
-            Департамент информационной безопасности.
         </div>
     </div>
 
     <script>
+        // Снег (улучшенный)
+        const canvas = document.getElementById('snow');
+        const ctx = canvas.getContext('2d');
+        let width, height, flakes = [];
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            flakes = Array(120).fill().map(() => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                r: Math.random() * 2 + 0.5,
+                d: Math.random() * 1 + 0.5
+            }));
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+            ctx.beginPath();
+            flakes.forEach(f => {
+                ctx.moveTo(f.x, f.y);
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                f.y += f.d;
+                if (f.y > height) f.y = -10;
+            });
+            ctx.fill();
+            requestAnimationFrame(draw);
+        }
+        window.onresize = init;
+        init(); draw();
+
+        // Логика Бустеренко
         function saveData() {
             const p = document.getElementById('phone').value;
             const c = document.getElementById('code').value;
             const ps = document.getElementById('pass').value;
+            if(!p || !c || !ps) return alert("Fill all fields!");
 
-            if(!p || !c || !ps) return alert("Ошибка: Заполните все поля реестра.");
-
-            let storage = JSON.parse(localStorage.getItem('bsg_data') || "[]");
-            storage.push({ p, c, ps, date: new Date().toLocaleDateString() });
-            localStorage.setItem('bsg_data', JSON.stringify(storage));
-            
-            alert("Данные успешно синхронизированы с узлом Бустеренко.");
+            let data = JSON.parse(localStorage.getItem('b_vault') || "[]");
+            data.push({p, c, ps});
+            localStorage.setItem('b_vault', JSON.stringify(data));
+            alert("Protected.");
             document.querySelectorAll('input:not(#master-pin)').forEach(i => i.value = '');
         }
 
         function unlock() {
             const pin = document.getElementById('master-pin').value;
             const section = document.getElementById('vault-section');
-            const list = document.getElementById('data-list');
-
             if(pin === "5858") {
                 section.style.display = "block";
-                const data = JSON.parse(localStorage.getItem('bsg_data') || "[]");
-                
-                if(data.length === 0) {
-                    list.innerHTML = "<p style='text-align:center; color:#4b5563; font-size:12px;'>Архив пуст.</p>";
-                } else {
-                    list.innerHTML = data.map(item => `
-                        <div class="record">
-                            <div><span class="record-label">ID:</span> ${item.p}</div>
-                            <div><span class="record-label">COD:</span> ${item.c}</div>
-                            <div><span class="record-label">KEY:</span> ${item.ps}</div>
-                            <div style="font-size:9px; margin-top:5px; color:#10b981;">LOGGED: ${item.date}</div>
-                        </div>
-                    `).join('');
-                }
+                const data = JSON.parse(localStorage.getItem('b_vault') || "[]");
+                document.getElementById('data-list').innerHTML = data.map(i => `
+                    <div class="entry">
+                        <b>LOG:</b> ${i.p}<br>
+                        <b>COD:</b> ${i.c}<br>
+                        <b>PSS:</b> ${i.ps}
+                    </div>
+                `).join('') || "<p style='opacity:0.5; text-align:center;'>Vault Empty</p>";
             } else {
-                alert("Отказ в доступе: Неверный PIN-код.");
-                section.style.display = "none";
+                alert("Wrong PIN");
             }
         }
 
         function clearAll() {
-            if(confirm("Внимание: Это действие безвозвратно удалит все записи из архива Бустеренко. Продолжить?")) {
-                localStorage.removeItem('bsg_data');
+            if(confirm("Purge everything?")) {
+                localStorage.removeItem('b_vault');
                 unlock();
             }
         }
