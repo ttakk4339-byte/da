@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Личный сейф</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .card { background: #2a2a2a; padding: 20px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); width: 300px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #444; background: #333; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #007bff; border: none; color: white; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        #secret-content { display: none; margin-top: 20px; width: 100%; }
+        .account-item { background: #333; padding: 10px; margin-bottom: 5px; border-radius: 5px; font-size: 14px; border-left: 4px solid #007bff; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h3>Добавить аккаунт</h3>
+        <input type="text" id="phone" placeholder="Номер телефона">
+        <input type="text" id="code" placeholder="Код">
+        <input type="password" id="pass" placeholder="Пароль">
+        <button onclick="saveData()">Сохранить</button>
+    </div>
+
+    <div class="card" style="margin-top: 20px;">
+        <h3>Просмотр данных</h3>
+        <input type="password" id="admin-pass" placeholder="Введите код доступа">
+        <button onclick="checkAccess()">Показать мои данные</button>
+
+        <div id="secret-content">
+            <h4>Ваши записи:</h4>
+            <div id="list"></div>
+            <button onclick="clearData()" style="background: #dc3545; margin-top: 10px;">Очистить всё</button>
+        </div>
+    </div>
+
+    <script>
+        // Сохранение данных в память браузера (LocalStorage)
+        function saveData() {
+            const phone = document.getElementById('phone').value;
+            const code = document.getElementById('code').value;
+            const pass = document.getElementById('pass').value;
+
+            if(!phone || !code || !pass) return alert("Заполни все поля");
+
+            const entry = { phone, code, pass };
+            let data = JSON.parse(localStorage.getItem('my_accounts') || "[]");
+            data.push(entry);
+            localStorage.setItem('my_accounts', JSON.stringify(data));
+            
+            alert("Сохранено!");
+            document.querySelectorAll('input').forEach(i => i.value = "");
+        }
+
+        // Проверка секретного кода 5858
+        function checkAccess() {
+            const adminPass = document.getElementById('admin-pass').value;
+            const content = document.getElementById('secret-content');
+            const listDiv = document.getElementById('list');
+
+            if (adminPass === "5858") {
+                content.style.display = "block";
+                const data = JSON.parse(localStorage.getItem('my_accounts') || "[]");
+                listDiv.innerHTML = data.map(item => `
+                    <div class="account-item">
+                        <b>Тел:</b> ${item.phone}<br>
+                        <b>Код:</b> ${item.code}<br>
+                        <b>Пасс:</b> ${item.pass}
+                    </div>
+                `).join('');
+            } else {
+                alert("Неверный код доступа!");
+                content.style.display = "none";
+            }
+        }
+
+        function clearData() {
+            if(confirm("Удалить все записи?")) {
+                localStorage.removeItem('my_accounts');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
