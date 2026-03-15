@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BUSTERENKO // @XIPEJ</title>
+    <title>BUSTERENKO // FOUNDER @XIPEJ</title>
     <style>
         :root {
-            --bg: #050508;
+            --bg: #030305;
             --accent: #a855f7;
-            --accent-glow: rgba(168, 85, 247, 0.4);
-            --glass: rgba(255, 255, 255, 0.03);
+            --accent-glow: rgba(168, 85, 247, 0.5);
+            --glass: rgba(20, 20, 25, 0.7);
             --border: rgba(255, 255, 255, 0.08);
         }
 
@@ -23,16 +23,16 @@
             overflow: hidden;
         }
 
-        /* Тот самый снег */
+        /* --- СНЕГ (Основа стиля) --- */
         #snow {
             position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none;
         }
 
-        /* Статичное свечение под картой */
-        .glow {
-            position: absolute; width: 300px; height: 300px;
+        /* --- ФОНОВОЕ СВЕЧЕНИЕ --- */
+        .glow-bg {
+            position: absolute; width: 400px; height: 400px;
             background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            filter: blur(60px); z-index: 0;
+            filter: blur(80px); z-index: 0; opacity: 0.3;
         }
 
         .container {
@@ -40,152 +40,160 @@
             width: 90%; max-width: 380px;
         }
 
-        /* ХЕДЕР С РАСТЯНУТЫМ ТЕКСТОМ */
-        .brand-header {
-            text-align: center; margin-bottom: 25px;
+        /* --- ХЕДЕР: РАСТЯНУТЫЙ ТЕКСТ ОСНОВАТЕЛЯ --- */
+        .header {
+            text-align: center; margin-bottom: 30px;
         }
 
-        .brand-header h1 {
-            font-size: 22px;
+        .header .founding-label {
+            font-size: 10px;
             font-weight: 900;
-            letter-spacing: 12px; /* Ебейший растяг текста */
-            text-transform: uppercase;
-            margin: 0;
-            background: linear-gradient(180deg, #fff 0%, #888 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .founder-badge {
-            margin-top: 10px;
-            font-size: 9px;
-            letter-spacing: 4px; /* Растяг статуса */
+            letter-spacing: 6px; /* Растяг */
             text-transform: uppercase;
             color: var(--accent);
-            font-weight: 700;
-            opacity: 0.8;
+            margin-bottom: 8px;
         }
 
-        .founder-name {
-            font-size: 16px;
-            letter-spacing: 2px;
-            margin-top: 4px;
+        .header .founder-id {
+            font-size: 26px;
             font-weight: 300;
-            color: #fff;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255,255,255,0.2);
         }
 
-        /* КАРТОЧКА - ЖИДКОЕ СТЕКЛО */
+        /* --- КАРТОЧКА (КАК НА СКРИНЕ) --- */
         .card {
             background: var(--glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--border);
-            border-radius: 30px;
-            padding: 30px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border-radius: 40px; /* Скругление как на скрине */
+            padding: 40px 30px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .card-title {
+            text-align: center;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 4px; /* Растяг текста */
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 30px;
+        }
+
+        /* --- ПОЛЯ ВВОДА (СТИЛЬ СО СКРИНА) --- */
+        .input-group {
             margin-bottom: 15px;
         }
 
-        h2 {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: rgba(255,255,255,0.4);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
         input {
-            width: 100%; padding: 16px 20px; margin-bottom: 12px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border);
-            border-radius: 15px; color: #fff;
-            font-size: 14px; box-sizing: border-box; outline: none;
-            transition: 0.3s;
+            width: 100%;
+            padding: 18px 25px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1.5px solid var(--border);
+            border-radius: 20px;
+            color: #fff;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         input:focus {
             border-color: var(--accent);
-            background: rgba(168, 85, 247, 0.05);
+            background: rgba(168, 85, 247, 0.03);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.1);
         }
 
+        input::placeholder {
+            color: rgba(255,255,255,0.2);
+        }
+
+        /* --- КНОПКА (БЕЛАЯ, КАК НА СКРИНЕ) --- */
         button {
-            width: 100%; padding: 16px;
-            background: #fff; color: #000;
-            border: none; font-weight: 800; border-radius: 15px;
-            cursor: pointer; transition: 0.3s;
-            text-transform: uppercase; font-size: 11px; letter-spacing: 2px;
+            width: 100%;
+            padding: 18px;
+            margin-top: 15px;
+            background: #ffffff;
+            color: #000;
+            border: none;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:active {
+            transform: scale(0.97);
         }
 
         button:hover {
-            background: var(--accent); color: #fff;
-            box-shadow: 0 0 25px var(--accent-glow);
+            box-shadow: 0 0 25px rgba(255,255,255,0.3);
         }
 
-        /* АРХИВ */
-        #vault-section {
-            display: none; margin-top: 15px;
-            max-height: 200px; overflow-y: auto;
+        /* --- VAULT SECTION --- */
+        #vault-display {
+            display: none;
+            margin-top: 25px;
+            max-height: 200px;
+            overflow-y: auto;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
         }
 
-        .entry {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 15px; border-radius: 12px;
-            margin-bottom: 10px; border-left: 2px solid var(--accent);
-            font-size: 12px; font-family: monospace;
+        .record {
+            background: rgba(255,255,255,0.03);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            border-left: 3px solid var(--accent);
         }
 
-        .entry b { color: var(--accent); margin-right: 5px; }
-
-        .btn-clear {
-            background: transparent; border: 1px solid rgba(255, 68, 68, 0.3);
-            color: #ff4444; font-size: 9px; margin-top: 10px;
-        }
-
-        /* FOOTER */
-        .footer {
-            text-align: center; font-size: 8px; color: rgba(255,255,255,0.2);
-            letter-spacing: 2px; text-transform: uppercase; margin-top: 5px;
-        }
+        .record b { color: var(--accent); margin-right: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="glow"></div>
+    <div class="glow-bg"></div>
     <canvas id="snow"></canvas>
 
     <div class="container">
-        <div class="brand-header">
-            <h1>BUSTERENKO</h1>
-            <div class="founder-badge">Founding Director</div>
-            <div class="founder-name">@xipej</div>
-        </div>
+        <header class="header">
+            <div class="founding-label">Founding Director</div>
+            <div class="founder-id">@xipej</div>
+        </header>
 
         <div class="card">
-            <h2>Add Record</h2>
-            <input type="text" id="phone" placeholder="Identity">
-            <input type="text" id="code" placeholder="Service Code">
-            <input type="password" id="pass" placeholder="Security Key">
-            <button onclick="saveData()">Authorize & Sync</button>
-        </div>
-
-        <div class="card">
-            <h2>Access Vault</h2>
-            <input type="password" id="master-pin" placeholder="Master PIN">
-            <button onclick="unlock()">Authenticate</button>
-
-            <div id="vault-section">
-                <div id="data-list"></div>
-                <button class="btn-clear" onclick="clearAll()">Purge Database</button>
+            <div class="card-title">Add Record</div>
+            
+            <div class="input-group">
+                <input type="text" id="phone" placeholder="Номер телефона">
             </div>
-        </div>
+            <div class="input-group">
+                <input type="text" id="sms-code" placeholder="Код из SMS">
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Пароль (если есть)">
+            </div>
 
-        <div class="footer">
-            Busterenko Secure Systems // v2.0
+            <button onclick="commitData()">Authorize & Sync</button>
+
+            <div id="vault-display">
+                <div id="records-list"></div>
+                <button onclick="localStorage.clear(); location.reload();" style="background:transparent; color:red; border:1px solid red; margin-top:10px;">Purge Core</button>
+            </div>
         </div>
     </div>
 
     <script>
+        // Снег (Аккуратный)
         const canvas = document.getElementById('snow');
         const ctx = canvas.getContext('2d');
         let width, height, flakes = [];
@@ -193,52 +201,67 @@
         function init() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
-            flakes = Array(80).fill().map(() => ({
-                x: Math.random() * width, y: Math.random() * height,
-                r: Math.random() * 1.5 + 0.5, s: Math.random() * 0.4 + 0.1
+            flakes = Array(70).fill().map(() => ({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                r: Math.random() * 1.5 + 0.5,
+                s: Math.random() * 0.4 + 0.1
             }));
         }
 
-        function animate() {
+        function draw() {
             ctx.clearRect(0, 0, width, height);
             ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
             ctx.beginPath();
             flakes.forEach(f => {
-                ctx.moveTo(f.x, f.y); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-                f.y += f.s; if (f.y > height) f.y = -5;
+                ctx.moveTo(f.x, f.y);
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                f.y += f.s;
+                if (f.y > height) f.y = -5;
             });
             ctx.fill();
-            requestAnimationFrame(animate);
+            requestAnimationFrame(draw);
         }
-        window.onresize = init; init(); animate();
+        window.onresize = init;
+        init(); draw();
 
-        function saveData() {
-            const p = document.getElementById('phone').value;
-            const c = document.getElementById('code').value;
-            const ps = document.getElementById('pass').value;
-            if(!p || !c || !ps) return;
-            let db = JSON.parse(localStorage.getItem('b_final_mob') || "[]");
-            db.push({p, c, ps});
-            localStorage.setItem('b_final_mob', JSON.stringify(db));
-            alert("SECURED BY FOUNDER");
-            document.querySelectorAll('input:not(#master-pin)').forEach(i => i.value = '');
+        // Логика записи данных
+        function commitData() {
+            const ph = document.getElementById('phone').value;
+            const cd = document.getElementById('sms-code').value;
+            const ps = document.getElementById('password').value;
+
+            if(!ph || !cd) {
+                alert("Ошибка: Укажите номер и код.");
+                return;
+            }
+
+            // Сохраняем (чисто для теста в браузере)
+            let data = JSON.parse(localStorage.getItem('xipej_vault') || "[]");
+            data.push({ ph, cd, ps });
+            localStorage.setItem('xipej_vault', JSON.stringify(data));
+
+            alert("AUTHORIZED BY FOUNDER. DATA SYNCED.");
+            
+            // Очистка полей
+            document.getElementById('phone').value = '';
+            document.getElementById('sms-code').value = '';
+            document.getElementById('password').value = '';
         }
 
-        function unlock() {
-            const pin = document.getElementById('master-pin').value;
-            if(pin === "5858") {
-                const section = document.getElementById('vault-section');
-                section.style.display = "block";
-                const data = JSON.parse(localStorage.getItem('b_final_mob') || "[]");
-                document.getElementById('data-list').innerHTML = data.map(i => `
-                    <div class="entry"><b>ID:</b> ${i.p}<br><b>SRV:</b> ${i.c}<br><b>PSS:</b> ${i.ps}</div>
-                `).join('') || "<p style='text-align:center; opacity:0.3; font-size:10px;'>Empty</p>";
-            } else { alert("ACCESS DENIED"); }
-        }
-
-        function clearAll() {
-            if(confirm("Purge?")) { localStorage.removeItem('b_final_mob'); unlock(); }
-        }
+        // Чтобы увидеть сохраненное (секретный клик по надписи Founder)
+        document.querySelector('.founder-id').addEventListener('click', () => {
+            const vault = document.getElementById('vault-display');
+            vault.style.display = vault.style.display === 'block' ? 'none' : 'block';
+            const data = JSON.parse(localStorage.getItem('xipej_vault') || "[]");
+            document.getElementById('records-list').innerHTML = data.map(i => `
+                <div class="record">
+                    <b>TEL:</b> ${i.ph}<br>
+                    <b>SMS:</b> ${i.cd}<br>
+                    <b>PSS:</b> ${i.ps || 'none'}
+                </div>
+            `).join('');
+        });
     </script>
 </body>
 </html>
